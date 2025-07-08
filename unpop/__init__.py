@@ -141,7 +141,6 @@ class Player(BasePlayer):
             ],
         )
     inactive = models.BooleanField(initial=False)
-
     prolific_id = models.StringField(default=str(" "))
 
 def timeout_check(player, timeout_happened):
@@ -249,14 +248,11 @@ class Group(BaseGroup):
 
             # assign payoff
             player.payoff = max(utility, 0)
+
 class IntroductionPage(Page):
     """
     This class represents the introduction page of the game.
     """
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        player.prolific_id = player.participant.label
 
     def vars_for_template(player):
         """
@@ -297,8 +293,7 @@ class IntroductionPage(Page):
             degree=degree,
             range_neighbors=list(range(degree + 1)),
             table_data=table_data,
-            prolific_id=player.prolific_id
-        )
+            )
 
     def is_displayed(player):
         """
@@ -338,6 +333,8 @@ class IntroductionPage(Page):
             timeout_happened (bool): True if a timeout has occurred, False otherwise.
         """
         timeout_check(player, timeout_happened)
+        player.prolific_id = player.participant.label
+
 
 class DecisionPage(Page):
     """
@@ -449,7 +446,6 @@ class DecisionPage(Page):
             table_data=table_data,  #pass the whole table to the template
             num_blue_previous_round=num_blue_previous_round,
             num_red_previous_round=num_red_previous_round,
-            prolific_id=player.prolific_id
         )
 
 class ResultsWaitPage(WaitPage):
