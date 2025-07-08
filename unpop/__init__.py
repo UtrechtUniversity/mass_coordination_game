@@ -29,7 +29,7 @@ class Constants(BaseConstants):
     lambda2 = 1.8
     min_group_participation = 0.5  # minimum group participation required for the game to continue
     introduction_timeout_seconds = 600  # timeout for the introduction stage
-    other_pages_timeout_seconds = 60  # timeout for other stages
+    other_pages_timeout_seconds = 120  # timeout for other stages
     # rewards
     min_payout = 5
     # in case no network condition is specified, a network will be generated; based on the following targets:
