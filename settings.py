@@ -29,7 +29,7 @@ SESSION_CONFIGS = [
         num_demo_participants=2,
         punishment_condition=False,
         app_sequence=["unpop"],
-        completionlink='https://app.prolific.co/submissions/complete?cc=11111111'
+        completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED'
     ),
 
 ]
