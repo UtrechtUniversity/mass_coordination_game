@@ -10,6 +10,9 @@ SESSION_CONFIGS = [
         network_condition= "test",
         punishment_condition=False,
         app_sequence=["unpop"],
+        participant_label_file='_rooms/test.txt',
+        use_secure_urls=True,
+        completionlink='https://app.prolific.co/submissions/complete?cc=11111111'
     ),
 
     dict(
@@ -27,6 +30,9 @@ SESSION_CONFIGS = [
         num_demo_participants=2,
         punishment_condition=False,
         app_sequence=["unpop"],
+        participant_label_file='_rooms/test.txt',
+        use_secure_urls=True,
+        completionlink='https://app.prolific.co/submissions/complete?cc=11111111'
     ),
 
 ]

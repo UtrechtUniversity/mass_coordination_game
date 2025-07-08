@@ -14,7 +14,7 @@ class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None # one session constitutes one group.
-    num_rounds = 3
+    num_rounds = 2
     # Roles
     majority_role = 'Red'
     minority_role = 'Blue'
@@ -142,6 +142,8 @@ class Player(BasePlayer):
         )
     inactive = models.BooleanField(initial=False)
 
+    prolific_id = models.StringField(default=str(" "))
+
 def timeout_check(player, timeout_happened):
     """
     This function checks if a timeout has occurred for a player.
@@ -251,6 +253,10 @@ class IntroductionPage(Page):
     """
     This class represents the introduction page of the game.
     """
+
+    def before_next_page(player, timeout_happened):
+        player.prolific_id = player.participant.label
+
     def vars_for_template(player):
         """
         This function provides the template variables for the introduction page.
@@ -290,6 +296,7 @@ class IntroductionPage(Page):
             degree=degree,
             range_neighbors=list(range(degree + 1)),
             table_data=table_data,
+            prolific_id=player.prolific_id
         )
 
     def is_displayed(player):
@@ -441,6 +448,7 @@ class DecisionPage(Page):
             table_data=table_data,  #pass the whole table to the template
             num_blue_previous_round=num_blue_previous_round,
             num_red_previous_round=num_red_previous_round,
+            prolific_id=player.prolific_id
         )
 
 class ResultsWaitPage(WaitPage):
@@ -560,6 +568,7 @@ class FinalGameResults(Page):
     """
     This class represents the final game results page of the game.
     """
+    @staticmethod
     def is_displayed(player):
         """
         Determines whether the final game results page should be displayed for a player.
@@ -576,10 +585,16 @@ class FinalGameResults(Page):
             and not player.participant.is_dropout
         )
 
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            completionlink=player.subsession.session.config['completionlink']
+        )
+
+    @staticmethod
     def vars_for_template(player):
         """
         Provides the variables for the template of the final game results page.
-        That is, the final accumulated payoff
 
         Args:
             player (Player): The player for whom to provide the variables.
@@ -587,10 +602,9 @@ class FinalGameResults(Page):
         Returns:
             dict: The variables for the template.
         """
-
         return dict(
-            accumulated_earnings = player.participant.payoff
-                    )
+            accumulated_earnings=player.participant.payoff
+        )
 
 class FailedGamePage(Page):
     """
