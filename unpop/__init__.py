@@ -254,6 +254,7 @@ class IntroductionPage(Page):
     This class represents the introduction page of the game.
     """
 
+    @staticmethod
     def before_next_page(player, timeout_happened):
         player.prolific_id = player.participant.label
 
