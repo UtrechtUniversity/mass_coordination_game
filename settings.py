@@ -38,8 +38,8 @@ ROOMS = [
     dict(
         name='your_study',
         display_name='your_study',
-        participant_label_file='_rooms/your_study.txt',
-        use_secure_urls=True,
+        #participant_label_file='_rooms/your_study.txt',
+        #use_secure_urls=True,
     ),
 ]
 
