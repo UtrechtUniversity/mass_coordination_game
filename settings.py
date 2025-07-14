@@ -3,32 +3,21 @@ import random
 
 SESSION_CONFIGS = [
 
-    dict(
-        name="unpopular_norm_small",
-        display_name="test_n6",
-        num_demo_participants=6,
-        network_condition= "test",
-        punishment_condition=False,
-        app_sequence=["unpop"],
-        completionlink='https://app.prolific.co/submissions/complete?cc=11111111'
-    ),
-
-    dict(
-        name="unpopular_norm_big",
-        display_name="test_n20",
-        num_demo_participants=20,
-        network_condition = "test_n20",
-        punishment_condition = False,
-        app_sequence=["unpop"],
-        completionlink='https://app.prolific.co/submissions/complete?cc=11111111'
-    ),
+    #dict(
+    #    name="unpopular_norm_small",
+    #    display_name="test_n6",
+    #    num_demo_participants=6,
+    #    network_condition= "test",
+    #    punishment_condition=False,
+    #    app_sequence=["unpop"],
+    #),
 
     dict(
         name="unpopular_norm_flexible",
         display_name="test_flex",
-        num_demo_participants=2,
+        num_demo_participants=3,
         punishment_condition=False,
-        app_sequence=["unpop"],
+        app_sequence=["consent", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED'
     ),
 
@@ -49,7 +38,7 @@ SESSION_CONFIG_DEFAULTS = dict(
     doc="",
 )
 
-PARTICIPANT_FIELDS = ["is_dropout", "role", 'has_dropped_out', 'too_many_inactive_in_group', 'guesses', 'choices', 'lobby_id', 'node', 'adj_matrix', 'role_vector', 'MPCR', 'groupsize']
+PARTICIPANT_FIELDS = ["consent", "is_dropout", "role", 'has_dropped_out', 'too_many_inactive_in_group', 'guesses', 'choices', 'lobby_id', 'node', 'adj_matrix', 'role_vector', 'MPCR', 'groupsize']
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans

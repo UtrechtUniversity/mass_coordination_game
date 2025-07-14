@@ -57,7 +57,7 @@ def creating_session(subsession):
         nodes = list(range(n))
         random.shuffle(nodes)
 
-        # spanning tree to ensure connectivity (no isolates)
+        # spanning tree to ensure connectivity
         for i in range(1, n):
             a = nodes[i]
             b = random.choice(nodes[:i])
@@ -75,6 +75,7 @@ def creating_session(subsession):
     if subsession.round_number == 1:
         players = subsession.get_players()
         num_players = len(players)
+
         net_condition = subsession.session.config.get("network_condition")
 
         if net_condition:

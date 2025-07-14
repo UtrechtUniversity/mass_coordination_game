@@ -107,36 +107,45 @@
         font-size: 0.9em;
     }
 
-    @media (max-width: 768px) {
-        .container {
-            padding: 10px;
-            margin: 10px auto;
+   .next-button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 24px;
+    }
+
+    .btn-primary {
+        font-size: 1rem;
+        color: #fff;
+        background-color: #4a86e8;
+        border: none;
+        border-radius: 30px;
+        padding: 15px 30px;
+        font-weight: 600;
+        display: inline-block;
+        transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+        background-color: #3a72bb;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+        .form-container {
+            padding: 20px;
         }
 
-        h3 {
-            font-size: 1.5em;
-            margin-bottom: 20px;
+        .table-container {
+            padding: 20px;
         }
 
-        .card-header {
-            justify-content: center;
-            font-size: 1.2em;
-        }
-
-        .card-icon {
-            margin-left: 0;
-            margin-top: 8px;
-        }
-
-        .table {
-            min-width: unset;
-            font-size: 0.75em;
-        }
-
-        .table th, .table td {
-            padding: 6px 8px;
+        .table th,
+        .table td {
+            font-size: 0.9em;
         }
     }
+
 </style>
 {% endblock %}
 
@@ -166,34 +175,15 @@
                         </tr>
                     </tbody>
                 </table>
-                <p id="redirect-msg">
-                    Redirecting to Prolific in <span id="countdown">15</span> seconds...
-                </p>
-                <div id="fallback-link">
-                    If you're not redirected automatically, <a href="#" id="manual-link">click here</a>.
-                </div>
             </div>
         </div>
         <br>
-
+  <div class="next-button-container">
+        <button class="btn-primary">Next</button>
     </div>
+    </div>
+
 </div>
 
-  <script>
-    let completionlink = js_vars.completionlink;
-    let countdown = 15;
 
-    const countdownEl = document.getElementById("countdown");
-    const manualLink = document.getElementById("manual-link");
-    manualLink.href = completionlink;
-
-    const interval = setInterval(() => {
-        countdown--;
-        countdownEl.textContent = countdown;
-        if (countdown <= 0) {
-            clearInterval(interval);
-            window.location.href = completionlink;
-        }
-    }, 1000);
-</script>
 {% endblock %}
