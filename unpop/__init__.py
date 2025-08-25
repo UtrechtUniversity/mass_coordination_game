@@ -34,10 +34,10 @@ class Constants(BaseConstants):
     density = .30
     min_prop = .30
     #rewards
-    points_per_euro_majority = 60
-    points_per_euro_minority = 25
-    base_payment = 3
-    max_payment = 7
+    points_per_euro_majority = 85
+    points_per_euro_minority = 22
+    base_payment = 2.5
+    max_payment = 5.5
 
 class Subsession(BaseSubsession):
     """
