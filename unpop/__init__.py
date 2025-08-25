@@ -14,7 +14,7 @@ class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None # one session constitutes one group.
-    num_rounds = 2
+    num_rounds = 12
     # Roles
     majority_role = 'Red'
     minority_role = 'Blue'
@@ -30,11 +30,14 @@ class Constants(BaseConstants):
     min_group_participation = 0.5  # minimum group participation required for the game to continue
     introduction_timeout_seconds = 600  # timeout for the introduction stage
     other_pages_timeout_seconds = 120  # timeout for other stages
-    # rewards
-    min_payout = 5
     # in case no network condition is specified, a network will be generated; based on the following targets:
     density = .30
     min_prop = .30
+    #rewards
+    points_per_euro_majority = 60
+    points_per_euro_minority = 25
+    base_payment = 3
+    max_payment = 7
 
 class Subsession(BaseSubsession):
     """
@@ -600,8 +603,29 @@ class FinalGameResults(Page):
         Returns:
             dict: The variables for the template.
         """
+
+        accumulated_earnings = player.participant.payoff
+        base = Constants.base_payment
+
+        conversion = (
+            Constants.points_per_euro_majority
+            if player.participant.role == Constants.majority_role
+            else Constants.points_per_euro_minority
+        )
+
+        euros = accumulated_earnings * 1/conversion
+        euros = min(euros, Constants.max_payment)
+        euros = max(euros, Constants.base_payment)
+        bonus = max(euros - base, 0)
+
+        player.participant.bonus = bonus
+
+
         return dict(
-            accumulated_earnings=player.participant.payoff
+            accumulated_earnings=accumulated_earnings,
+            base=base,
+            bonus=bonus,
+            euros=euros,
         )
 
 class FailedGamePage(Page):

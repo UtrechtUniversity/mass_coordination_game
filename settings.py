@@ -3,24 +3,14 @@ import random
 
 SESSION_CONFIGS = [
 
-    #dict(
-    #    name="unpopular_norm_small",
-    #    display_name="test_n6",
-    #    num_demo_participants=6,
-    #    network_condition= "test",
-    #    punishment_condition=False,
-    #    app_sequence=["unpop"],
-    #),
-
     dict(
         name="unpopular_norm_flexible",
         display_name="test_flex",
-        num_demo_participants=3,
-        punishment_condition=False,
+        num_demo_participants=20,
+        network_condition = "test_n20",
         app_sequence=["consent", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED'
     ),
-
 ]
 
 ROOMS = [
@@ -34,11 +24,11 @@ ROOMS = [
 
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1/30,
-    participation_fee=5.00,
+    participation_fee=3.00,
     doc="",
 )
 
-PARTICIPANT_FIELDS = ["consent", "is_dropout", "role", 'has_dropped_out', 'too_many_inactive_in_group', 'guesses', 'choices', 'lobby_id', 'node', 'adj_matrix', 'role_vector', 'MPCR', 'groupsize']
+PARTICIPANT_FIELDS = [ "bonus", "consent", "is_dropout", "role", 'has_dropped_out', 'too_many_inactive_in_group', 'guesses', 'choices', 'lobby_id', 'node', 'adj_matrix', 'role_vector', 'MPCR', 'groupsize']
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans

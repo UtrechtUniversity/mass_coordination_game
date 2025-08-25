@@ -143,8 +143,6 @@
         <h2><i class="fas fa-rocket icon-text"></i>Introduction</h2>
         <p>Thank you for participating in the online academic study <b>{{ Constants.title }}</b>.</p>
         <p>You are about to engage in a decision-making game. Please read the following instructions carefully!
-            You will receive a minimum reward of {{ Constants.min_payout }} Euro for participating in this study,
-            but your total earnings may increase based on the choices you make during the game ...
         </p>
     </div>
 
@@ -250,6 +248,12 @@
         </div>
         <br>
     {% endif %}
+        <br>
+        <p>At the end of the game, points will be be converted into euros ({% if role == Constants.majority_role %}{{Constants.points_per_euro_majority}}
+             {% else %} {{Constants.points_per_euro_minority}}
+              {% endif %}
+            points = £1).</p>
+
 </div>
 
     <div class="section stages">

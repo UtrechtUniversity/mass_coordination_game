@@ -2,7 +2,7 @@ from otree.api import *
 
 
 doc = """
-Your app description
+redirecting to prolific with completion code
 """
 
 
