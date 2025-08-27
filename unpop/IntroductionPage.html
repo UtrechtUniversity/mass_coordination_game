@@ -161,10 +161,11 @@
         Some players prefer red, while others prefer blue. One group holds a majority, but you don't know which one.</p>
 
     {% if role == Constants.majority_role %}
-        <p>In this game, you prefer red, but your main objective is to coordinate your shirt choice with your neighbors.
+        <p>In this game, <strong>you prefer red</strong>, but your main objective is to coordinate your shirt choice with your neighbors.
             Every round, you earn points for choosing your preferred color, but the key to maximizing your rewards is aligning your choice with your neighbors.
             The more neighbors who match your shirt color in that round, the more points you earn.
-            Below, you will find tables displaying the fixed rewards for each shirt choice and the variable rewards you can earn per round based on the number of neighbors you coordinate with.</p>
+            Below, you will find tables displaying the fixed rewards for each shirt choice and the variable rewards you can earn per round based on the number of neighbors you coordinate with.
+        Players with the same preferred color share the same reward structure.</p>
 
         <h3 style="font-size: 1rem;"><b>Table 1.</b> Fixed rewards for shirt choices</h3>
         <div class="table-container">
@@ -218,7 +219,7 @@
             </table>
         </div>
     {% else %}
-        <p>In this game, <strong>you prefer blue</strong>.  Below, you will find a table displaying the fixed rewards for each shirt choice.
+        <p>In this game, <strong>you prefer blue</strong>.  Below, you will find a table displaying the fixed rewards for each shirt choice.  Players with the same preferred color share the same reward structure.
 
         <h3 style="font-size: 1rem;"><b>Table 1.</b> Fixed rewards for shirt choices</h3>
         <div class="table-container">

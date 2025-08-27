@@ -147,6 +147,17 @@ class Player(BasePlayer):
     inactive = models.BooleanField(initial=False)
     prolific_id = models.StringField(default=str(" "))
 
+    # comprehension questions
+    q_red_zero = models.IntegerField(min=0, label="")
+    q_blue_zero = models.IntegerField(min=0, label="")
+    q_red_half = models.IntegerField(min=0, label="")
+    q_blue_half = models.IntegerField(min=0, label="")
+
+    payoff_red_zero = models.IntegerField()
+    payoff_blue_zero = models.IntegerField()
+    payoff_red_half = models.IntegerField()
+    payoff_blue_half = models.IntegerField()
+
 def timeout_check(player, timeout_happened):
     """
     This function checks if a timeout has occurred for a player.
@@ -339,6 +350,81 @@ class IntroductionPage(Page):
         timeout_check(player, timeout_happened)
         player.prolific_id = player.participant.label
 
+class ComprehensionPage(Page):
+    form_model = 'player'
+    form_fields = ['q_red_zero', 'q_blue_zero', 'q_red_half', 'q_blue_half']
+
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.role == Constants.majority_role
+
+    def vars_for_template(player):
+
+        adj_matrix = player.participant.adj_matrix
+        my_node = player.id_in_group - 1
+        degree = sum(adj_matrix[my_node])
+
+        table_data = []
+        for n in range(degree + 1):
+            p = n / degree
+            zstar = Constants.z * (1 - math.exp(-Constants.lambda1 * p)) / (1 - math.exp(-Constants.lambda1))
+            wstar = Constants.w * (1 - math.exp(-Constants.lambda2 * p)) / (1 - math.exp(-Constants.lambda2))
+            table_data.append({
+                'c_n': n,
+                'zstar': int(zstar),
+                'wstar': int(wstar)
+            })
+
+        blue_neighbors = degree
+        red_neighbors = 0
+        payoff_red_zero = Constants.s + Constants.w * (1 - math.exp(-Constants.lambda2 * (red_neighbors / max(1, degree)))) / (1 - math.exp(-Constants.lambda2))
+        payoff_blue_zero = Constants.z * (1 - math.exp(-Constants.lambda1 * (blue_neighbors / max(1, degree)))) / (1 - math.exp(-Constants.lambda1))
+
+        blue_neighbors_half = degree // 2
+        red_neighbors_half = degree - blue_neighbors_half
+        payoff_red_half = Constants.s + Constants.w * (1 - math.exp(-Constants.lambda2 * (red_neighbors_half / max(1, degree)))) / (1 - math.exp(-Constants.lambda2))
+        payoff_blue_half = Constants.z * (1 - math.exp(-Constants.lambda1 * (blue_neighbors_half / max(1, degree)))) / (1 - math.exp(-Constants.lambda1))
+
+        # store correct answers in player so we can check them later
+        player.payoff_red_zero = int(payoff_red_zero)
+        player.payoff_blue_zero = int(payoff_blue_zero)
+        player.payoff_red_half = int(payoff_red_half)
+        player.payoff_blue_half = int(payoff_blue_half)
+
+        return dict(
+            role=player.participant.role,
+            degree=degree,
+            table_data=table_data,
+            blue_neighbors_half=blue_neighbors_half,
+            red_neighbors_half=red_neighbors_half,
+        )
+
+    def error_message(player, values):
+        # Use the stored payoffs
+        correct_answers = {
+            'q_red_zero': player.payoff_red_zero,
+            'q_blue_zero': player.payoff_blue_zero,
+            'q_red_half': player.payoff_red_half,
+            'q_blue_half': player.payoff_blue_half
+        }
+
+        incorrect_fields = []
+        labels = {'q_red_zero': 'A', 'q_blue_zero': 'B', 'q_red_half': 'C', 'q_blue_half': 'D'}
+
+        for field_name, correct_value in correct_answers.items():
+            if values.get(field_name) != correct_value:
+                incorrect_fields.append(labels[field_name])
+
+        if incorrect_fields:
+            return (
+                    "Incorrect answers: " + ", ".join(incorrect_fields)  +
+                    ".  Your total points = reward for picking a color (Table 1) + reward for matching neighbors (Table 2)."
+            )
+
+    def get_timeout_seconds(player):
+        return timeout_time(player, Constants.other_pages_timeout_seconds)
+
+    def before_next_page(player, timeout_happened):
+        timeout_check(player, timeout_happened)
 
 class DecisionPage(Page):
     """
@@ -657,6 +743,7 @@ class FailedGamePage(Page):
         return player.group.failed or (player.participant.is_dropout and player.round_number == Constants.num_rounds)
 
 page_sequence = [IntroductionPage,
+                 ComprehensionPage,
                  DecisionPage,
                  ResultsWaitPage,
                  ResultsPage,
