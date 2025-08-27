@@ -14,7 +14,7 @@ class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None # one session constitutes one group.
-    num_rounds = 12
+    num_rounds = 2
     # Roles
     majority_role = 'Red'
     minority_role = 'Blue'
@@ -28,7 +28,8 @@ class Constants(BaseConstants):
     lambda1 = 4.3
     lambda2 = 1.8
     min_group_participation = 0.5  # minimum group participation required for the game to continue
-    introduction_timeout_seconds = 600  # timeout for the introduction stage
+    introduction_timeout_seconds = 420  # timeout for the introduction stage
+    comprehension_timeout_seconds = 180 # for comprehension test
     other_pages_timeout_seconds = 120  # timeout for other stages
     # in case no network condition is specified, a network will be generated; based on the following targets:
     density = .30
@@ -421,7 +422,7 @@ class ComprehensionPage(Page):
             )
 
     def get_timeout_seconds(player):
-        return timeout_time(player, Constants.other_pages_timeout_seconds)
+        return timeout_time(player, Constants.comprehension_timeout_seconds)
 
     def before_next_page(player, timeout_happened):
         timeout_check(player, timeout_happened)
