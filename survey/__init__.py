@@ -33,19 +33,25 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect
     )
 
-    comments = models.LongStringField(
+    strategy = models.LongStringField(
         blank=True,
-        label="Can you explain why you gave these answers? If you have any other comments or feedback, you can also write that here."
+        label="What strategy did you use when deciding which color to choose? Please describe your reasoning."
     )
 
     perceived_rq = models.LongStringField(
         blank=True,
         label="What do you think this experiment was about? What question do you think the researchers are trying to answer?"
     )
+
+    comments = models.LongStringField(
+        blank=True,
+        label="If you have any other comments or feedback, you can write that here."
+    )
+
 # PAGES
 class Questionnaire(Page):
     form_model = 'player'
-    form_fields = ['enjoyment', 'clarity', 'comments', 'perceived_rq']
+    form_fields = ['enjoyment', 'clarity', 'strategy', 'perceived_rq', 'comments']
 
 
 page_sequence = [Questionnaire]
