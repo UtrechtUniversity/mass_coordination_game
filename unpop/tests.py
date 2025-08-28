@@ -9,13 +9,13 @@ class PlayerBot(Bot):
 
         # comprehension check
         player = self.player
-        if self.round_number == 1 and player.participant.role == Constants.majority_role:
-            yield ComprehensionPage, {
-                'q_red_zero': player.payoff_red_zero,
-                'q_blue_zero': player.payoff_blue_zero,
-                'q_red_half': player.payoff_red_half,
-                'q_blue_half': player.payoff_blue_half,
-            }
+        #if self.round_number == 1 and player.participant.role == Constants.majority_role:
+        #    yield ComprehensionPage, {
+        #        'q_red_zero': player.payoff_red_zero,
+        #        'q_blue_zero': player.payoff_blue_zero,
+        #        'q_red_half': player.payoff_red_half,
+        #        'q_blue_half': player.payoff_blue_half,
+        #    }
 
         # DecisionPage: players follow their preference
         choice = True if self.player.participant.role == Constants.minority_role else False

@@ -8,9 +8,10 @@ SESSION_CONFIGS = [
         display_name="test_flex",
         num_demo_participants=20,
         network_condition = "test_n20",
-        app_sequence=["consent", "unpop", "survey", "reward", "exit"],
+        #app_sequence=["consent", "unpop", "survey", "reward", "exit"],
+        app_sequence=["unpop", "survey", "reward",],
         completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED',
-        use_browser_bots=False
+        use_browser_bots=True
     ),
 ]
 

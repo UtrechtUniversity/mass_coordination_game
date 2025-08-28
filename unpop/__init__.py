@@ -14,7 +14,7 @@ class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None # one session constitutes one group.
-    num_rounds = 5
+    num_rounds = 12
     # Roles
     majority_role = 'Red'
     minority_role = 'Blue'
@@ -744,7 +744,7 @@ class FailedGamePage(Page):
         return player.group.failed or (player.participant.is_dropout and player.round_number == Constants.num_rounds)
 
 page_sequence = [IntroductionPage,
-                 ComprehensionPage,
+                 #ComprehensionPage,
                  DecisionPage,
                  ResultsWaitPage,
                  ResultsPage,
