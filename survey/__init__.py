@@ -10,6 +10,7 @@ class Constants(BaseConstants):
     name_in_url = 'questionnaire'
     players_per_group = None
     num_rounds = 1
+    majority_role = 'Red'
 
 
 
@@ -51,7 +52,18 @@ class Player(BasePlayer):
 # PAGES
 class Questionnaire(Page):
     form_model = 'player'
-    form_fields = ['enjoyment', 'clarity', 'strategy', 'perceived_rq', 'comments']
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        fields = ['enjoyment', 'clarity', 'perceived_rq', 'comments']
+        if player.participant.role == Constants.majority_role:
+            fields.insert(2, 'strategy') # ask question about strategy only to majority members.
+        return fields
+
+page_sequence = [Questionnaire]
+
+
+
 
 
 page_sequence = [Questionnaire]
