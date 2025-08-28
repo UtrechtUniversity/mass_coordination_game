@@ -9,7 +9,8 @@ SESSION_CONFIGS = [
         num_demo_participants=3,
         #network_condition = "test_n20",
         app_sequence=["consent", "unpop", "survey", "reward", "exit"],
-        completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED'
+        completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED',
+        use_browser_bots=True
     ),
 ]
 

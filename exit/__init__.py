@@ -26,7 +26,10 @@ class Player(BasePlayer):
 
 # PAGES
 class Exit(Page):
-    pass
+    @staticmethod
+    def is_displayed(player):
+        return not getattr(player.participant, 'consent', False)
+
 
 
 page_sequence = [Exit]
