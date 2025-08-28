@@ -51,6 +51,6 @@ class OtreeTaskSet(TaskSet):
         raise StopUser()
 
 class WebsiteUser(HttpUser):
-    wait_time = between(5, 9)
+    wait_time = between(1, 3)
     host = 'http://game.robfranken.net/'
     tasks = [OtreeTaskSet]
