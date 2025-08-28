@@ -52,5 +52,5 @@ class OtreeTaskSet(TaskSet):
 
 class WebsiteUser(HttpUser):
     wait_time = between(5, 9)
-    host = 'http://localhost:8000'
+    host = 'http://game.robfranken.net/'
     tasks = [OtreeTaskSet]
