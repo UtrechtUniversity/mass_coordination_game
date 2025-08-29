@@ -297,8 +297,8 @@ class IntroductionPage(Page):
             # Append the result to the table_data with the number of neighbors and corresponding zstar, wstar
             table_data.append({
                 'c_n': n,  # Number of coordinating alters
-                'zstar': int(zstar),  # Computed value for zstar
-                'wstar': int(wstar)  # Computed value for wstar
+                'zstar': round(zstar),  # Computed value for zstar
+                'wstar': round(wstar)  # Computed value for wstar
             })
 
         return dict(
@@ -371,8 +371,8 @@ class ComprehensionPage(Page):
             wstar = Constants.w * (1 - math.exp(-Constants.lambda2 * p)) / (1 - math.exp(-Constants.lambda2))
             table_data.append({
                 'c_n': n,
-                'zstar': int(zstar),
-                'wstar': int(wstar)
+                'zstar': round(zstar),
+                'wstar': round(wstar)
             })
 
         blue_neighbors = degree
@@ -386,10 +386,10 @@ class ComprehensionPage(Page):
         payoff_blue_half = Constants.z * (1 - math.exp(-Constants.lambda1 * (blue_neighbors_half / max(1, degree)))) / (1 - math.exp(-Constants.lambda1))
 
         # store correct answers in player so we can check them later
-        player.payoff_red_zero = int(payoff_red_zero)
-        player.payoff_blue_zero = int(payoff_blue_zero)
-        player.payoff_red_half = int(payoff_red_half)
-        player.payoff_blue_half = int(payoff_blue_half)
+        player.payoff_red_zero = round(payoff_red_zero)
+        player.payoff_blue_zero = round(payoff_blue_zero)
+        player.payoff_red_half = round(payoff_red_half)
+        player.payoff_blue_half = round(payoff_blue_half)
 
         return dict(
             role=player.participant.role,
@@ -492,8 +492,8 @@ class DecisionPage(Page):
             # append the result to the table_data with the number of neighbors and corresponding zstar, wstar
             table_data.append({
                 'c_n': n,  # Number of coordinating alters
-                'zstar': int(zstar),  # Computed value for zstar
-                'wstar': int(wstar)  # Computed value for wstar
+                'zstar': round(zstar),  # Computed value for zstar
+                'wstar': round(wstar)  # Computed value for wstar
             })
 
             # initialize variables for the previous round (only available for rounds > 1)
@@ -700,18 +700,21 @@ class FinalGameResults(Page):
             else Constants.points_per_euro_minority
         )
 
-        euros = int(accumulated_earnings * 1/conversion)
-        euros = min(euros, Constants.max_payment)
-        euros = max(euros, Constants.base_payment)
-        bonus = max(euros - base, 0)
+        # accumulated points to euros
+        euros = float(accumulated_earnings) / conversion
+        euros = min(euros, Constants.max_payment)  # cap at max
+        euros = max(euros, Constants.base_payment)  # floor at base
 
-        player.participant.bonus = int(bonus)
+        bonus = max(euros - base, 0) # retrieve bonus payment
+
+        player.participant.bonus = round(bonus, 2)
 
         return dict(
             accumulated_earnings=accumulated_earnings,
-            base=base,
-            bonus=bonus,
-            euros=euros,
+            raw_euros = float(accumulated_earnings) / conversion,
+            base="{:.2f}".format(base),
+            bonus="{:.2f}".format(bonus),
+            euros="{:.2f}".format(euros),
         )
 
 class FailedGamePage(Page):
