@@ -250,10 +250,11 @@
         <br>
     {% endif %}
         <br>
-        <p>At the end of the game, points will be be converted into euros ({% if role == Constants.majority_role %}{{Constants.points_per_euro_majority}}
+        <p>At the end of the game, points will be converted into euros ({% if role == Constants.majority_role %}{{Constants.points_per_euro_majority}}
              {% else %} {{Constants.points_per_euro_minority}}
               {% endif %}
-            points = £1).</p>
+            points = £1). You will always receive at least £{{ Constants.base_payment }}, even if your points would convert to less.
+            You cannot earn more than £{{ Constants.max_payment }}, even if your points would convert to more.</p>
 
 </div>
 

@@ -700,13 +700,12 @@ class FinalGameResults(Page):
             else Constants.points_per_euro_minority
         )
 
-        euros = accumulated_earnings * 1/conversion
+        euros = int(accumulated_earnings * 1/conversion)
         euros = min(euros, Constants.max_payment)
         euros = max(euros, Constants.base_payment)
         bonus = max(euros - base, 0)
 
-        player.participant.bonus = bonus
-
+        player.participant.bonus = int(bonus)
 
         return dict(
             accumulated_earnings=accumulated_earnings,
