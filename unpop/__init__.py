@@ -14,7 +14,7 @@ class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None # one session constitutes one group.
-    num_rounds = 3
+    num_rounds = 12
     # Roles
     majority_role = 'Red'
     minority_role = 'Blue'
@@ -28,13 +28,17 @@ class Constants(BaseConstants):
     lambda1 = 4.3
     lambda2 = 1.8
     min_group_participation = 0.5  # minimum group participation required for the game to continue
-    introduction_timeout_seconds = 600  # timeout for the introduction stage
-    other_pages_timeout_seconds = 60  # timeout for other stages
-    # rewards
-    min_payout = 5
+    introduction_timeout_seconds = 420  # timeout for the introduction stage
+    comprehension_timeout_seconds = 180 # for comprehension test
+    other_pages_timeout_seconds = 120  # timeout for other stages
     # in case no network condition is specified, a network will be generated; based on the following targets:
     density = .30
     min_prop = .30
+    #rewards
+    points_per_euro_majority = 85
+    points_per_euro_minority = 22
+    base_payment = 2.5
+    max_payment = 5.5
 
 class Subsession(BaseSubsession):
     """
@@ -57,7 +61,7 @@ def creating_session(subsession):
         nodes = list(range(n))
         random.shuffle(nodes)
 
-        # spanning tree to ensure connectivity (no isolates)
+        # spanning tree to ensure connectivity
         for i in range(1, n):
             a = nodes[i]
             b = random.choice(nodes[:i])
@@ -75,6 +79,7 @@ def creating_session(subsession):
     if subsession.round_number == 1:
         players = subsession.get_players()
         num_players = len(players)
+
         net_condition = subsession.session.config.get("network_condition")
 
         if net_condition:
@@ -141,6 +146,18 @@ class Player(BasePlayer):
             ],
         )
     inactive = models.BooleanField(initial=False)
+    prolific_id = models.StringField(default=str(" "))
+
+    # comprehension questions
+    q_red_zero = models.IntegerField(min=0, label="")
+    q_blue_zero = models.IntegerField(min=0, label="")
+    q_red_half = models.IntegerField(min=0, label="")
+    q_blue_half = models.IntegerField(min=0, label="")
+
+    payoff_red_zero = models.IntegerField()
+    payoff_blue_zero = models.IntegerField()
+    payoff_red_half = models.IntegerField()
+    payoff_blue_half = models.IntegerField()
 
 def timeout_check(player, timeout_happened):
     """
@@ -247,10 +264,12 @@ class Group(BaseGroup):
 
             # assign payoff
             player.payoff = max(utility, 0)
+
 class IntroductionPage(Page):
     """
     This class represents the introduction page of the game.
     """
+
     def vars_for_template(player):
         """
         This function provides the template variables for the introduction page.
@@ -278,8 +297,8 @@ class IntroductionPage(Page):
             # Append the result to the table_data with the number of neighbors and corresponding zstar, wstar
             table_data.append({
                 'c_n': n,  # Number of coordinating alters
-                'zstar': int(zstar),  # Computed value for zstar
-                'wstar': int(wstar)  # Computed value for wstar
+                'zstar': round(zstar),  # Computed value for zstar
+                'wstar': round(wstar)  # Computed value for wstar
             })
 
         return dict(
@@ -290,7 +309,7 @@ class IntroductionPage(Page):
             degree=degree,
             range_neighbors=list(range(degree + 1)),
             table_data=table_data,
-        )
+            )
 
     def is_displayed(player):
         """
@@ -329,6 +348,83 @@ class IntroductionPage(Page):
             player (Player): The player for whom to perform the before_next_page actions.
             timeout_happened (bool): True if a timeout has occurred, False otherwise.
         """
+        timeout_check(player, timeout_happened)
+        player.prolific_id = player.participant.label
+
+class ComprehensionPage(Page):
+    form_model = 'player'
+    form_fields = ['q_red_zero', 'q_blue_zero', 'q_red_half', 'q_blue_half']
+
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.role == Constants.majority_role
+
+    def vars_for_template(player):
+
+        adj_matrix = player.participant.adj_matrix
+        my_node = player.id_in_group - 1
+        degree = sum(adj_matrix[my_node])
+
+        table_data = []
+        for n in range(degree + 1):
+            p = n / degree
+            zstar = Constants.z * (1 - math.exp(-Constants.lambda1 * p)) / (1 - math.exp(-Constants.lambda1))
+            wstar = Constants.w * (1 - math.exp(-Constants.lambda2 * p)) / (1 - math.exp(-Constants.lambda2))
+            table_data.append({
+                'c_n': n,
+                'zstar': round(zstar),
+                'wstar': round(wstar)
+            })
+
+        blue_neighbors = degree
+        red_neighbors = 0
+        payoff_red_zero = Constants.s + Constants.w * (1 - math.exp(-Constants.lambda2 * (red_neighbors / max(1, degree)))) / (1 - math.exp(-Constants.lambda2))
+        payoff_blue_zero = Constants.z * (1 - math.exp(-Constants.lambda1 * (blue_neighbors / max(1, degree)))) / (1 - math.exp(-Constants.lambda1))
+
+        blue_neighbors_half = degree // 2
+        red_neighbors_half = degree - blue_neighbors_half
+        payoff_red_half = Constants.s + Constants.w * (1 - math.exp(-Constants.lambda2 * (red_neighbors_half / max(1, degree)))) / (1 - math.exp(-Constants.lambda2))
+        payoff_blue_half = Constants.z * (1 - math.exp(-Constants.lambda1 * (blue_neighbors_half / max(1, degree)))) / (1 - math.exp(-Constants.lambda1))
+
+        # store correct answers in player so we can check them later
+        player.payoff_red_zero = round(payoff_red_zero)
+        player.payoff_blue_zero = round(payoff_blue_zero)
+        player.payoff_red_half = round(payoff_red_half)
+        player.payoff_blue_half = round(payoff_blue_half)
+
+        return dict(
+            role=player.participant.role,
+            degree=degree,
+            table_data=table_data,
+            blue_neighbors_half=blue_neighbors_half,
+            red_neighbors_half=red_neighbors_half,
+        )
+
+    def error_message(player, values):
+        # Use the stored payoffs
+        correct_answers = {
+            'q_red_zero': player.payoff_red_zero,
+            'q_blue_zero': player.payoff_blue_zero,
+            'q_red_half': player.payoff_red_half,
+            'q_blue_half': player.payoff_blue_half
+        }
+
+        incorrect_fields = []
+        labels = {'q_red_zero': 'A', 'q_blue_zero': 'B', 'q_red_half': 'C', 'q_blue_half': 'D'}
+
+        for field_name, correct_value in correct_answers.items():
+            if values.get(field_name) != correct_value:
+                incorrect_fields.append(labels[field_name])
+
+        if incorrect_fields:
+            return (
+                    "Incorrect answers: " + ", ".join(incorrect_fields)  +
+                    ".  Your total points = reward for picking a color (Table 1) + reward for matching neighbors (Table 2)."
+            )
+
+    def get_timeout_seconds(player):
+        return timeout_time(player, Constants.comprehension_timeout_seconds)
+
+    def before_next_page(player, timeout_happened):
         timeout_check(player, timeout_happened)
 
 class DecisionPage(Page):
@@ -396,8 +492,8 @@ class DecisionPage(Page):
             # append the result to the table_data with the number of neighbors and corresponding zstar, wstar
             table_data.append({
                 'c_n': n,  # Number of coordinating alters
-                'zstar': int(zstar),  # Computed value for zstar
-                'wstar': int(wstar)  # Computed value for wstar
+                'zstar': round(zstar),  # Computed value for zstar
+                'wstar': round(wstar)  # Computed value for wstar
             })
 
             # initialize variables for the previous round (only available for rounds > 1)
@@ -560,6 +656,7 @@ class FinalGameResults(Page):
     """
     This class represents the final game results page of the game.
     """
+    @staticmethod
     def is_displayed(player):
         """
         Determines whether the final game results page should be displayed for a player.
@@ -576,10 +673,16 @@ class FinalGameResults(Page):
             and not player.participant.is_dropout
         )
 
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            completionlink=player.subsession.session.config['completionlink']
+        )
+
+    @staticmethod
     def vars_for_template(player):
         """
         Provides the variables for the template of the final game results page.
-        That is, the final accumulated payoff
 
         Args:
             player (Player): The player for whom to provide the variables.
@@ -588,9 +691,31 @@ class FinalGameResults(Page):
             dict: The variables for the template.
         """
 
+        accumulated_earnings = player.participant.payoff
+        base = Constants.base_payment
+
+        conversion = (
+            Constants.points_per_euro_majority
+            if player.participant.role == Constants.majority_role
+            else Constants.points_per_euro_minority
+        )
+
+        # accumulated points to euros
+        euros = float(accumulated_earnings) / conversion
+        euros = min(euros, Constants.max_payment)  # cap at max
+        euros = max(euros, Constants.base_payment)  # floor at base
+
+        bonus = max(euros - base, 0) # retrieve bonus payment
+
+        player.participant.bonus = round(bonus, 2)
+
         return dict(
-            accumulated_earnings = player.participant.payoff
-                    )
+            accumulated_earnings=accumulated_earnings,
+            raw_euros = float(accumulated_earnings) / conversion,
+            base="{:.2f}".format(base),
+            bonus="{:.2f}".format(bonus),
+            euros="{:.2f}".format(euros),
+        )
 
 class FailedGamePage(Page):
     """
@@ -621,6 +746,7 @@ class FailedGamePage(Page):
         return player.group.failed or (player.participant.is_dropout and player.round_number == Constants.num_rounds)
 
 page_sequence = [IntroductionPage,
+                 ComprehensionPage,
                  DecisionPage,
                  ResultsWaitPage,
                  ResultsPage,

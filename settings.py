@@ -4,47 +4,43 @@ import random
 SESSION_CONFIGS = [
 
     dict(
-        name="unpopular_norm_small",
-        display_name="test_n6",
-        num_demo_participants=6,
-        network_condition= "test",
-        punishment_condition=False,
-        app_sequence=["unpop"],
+        name="unpopular_norm_pilot",
+        display_name="pilot",
+        num_demo_participants=20,
+        network_condition="test_n20",
+        app_sequence=["consent", "unpop", "survey", "reward", "exit"],
+        completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED',
+        # use_browser_bots=True
     ),
 
-    dict(
-        name="unpopular_norm_big",
-        display_name="test_n20",
-        num_demo_participants=20,
-        network_condition = "test_n20",
-        punishment_condition = False,
-        app_sequence=["unpop"],
-    ),
 
     dict(
         name="unpopular_norm_flexible",
         display_name="test_flex",
-        num_demo_participants=2,
-        punishment_condition=False,
-        app_sequence=["unpop"],
+        num_demo_participants=3,
+        #network_condition = "test_n20",
+        app_sequence=["consent", "unpop", "survey", "reward", "exit"],
+        completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED',
+        #use_browser_bots=True
     ),
-
 ]
 
 ROOMS = [
     dict(
-        name='test',
-        display_name='Test room'
-    )
+        name='your_study',
+        display_name='your_study',
+        #participant_label_file='_rooms/your_study.txt',
+        #use_secure_urls=True,
+    ),
 ]
 
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1/30,
-    participation_fee=5.00,
+    participation_fee=3.00,
     doc="",
 )
 
-PARTICIPANT_FIELDS = ["is_dropout", "role", 'has_dropped_out', 'too_many_inactive_in_group', 'guesses', 'choices', 'lobby_id', 'node', 'adj_matrix', 'role_vector', 'MPCR', 'groupsize']
+PARTICIPANT_FIELDS = [ "bonus", "consent", "is_dropout", "role", 'has_dropped_out', 'too_many_inactive_in_group', 'guesses', 'choices', 'lobby_id', 'node', 'adj_matrix', 'role_vector', 'MPCR', 'groupsize']
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans

@@ -143,14 +143,12 @@
         <h2><i class="fas fa-rocket icon-text"></i>Introduction</h2>
         <p>Thank you for participating in the online academic study <b>{{ Constants.title }}</b>.</p>
         <p>You are about to engage in a decision-making game. Please read the following instructions carefully!
-            You will receive a minimum reward of {{ Constants.min_payout }} Euro for participating in this study,
-            but your total earnings may increase based on the choices you make during the game ...
         </p>
     </div>
 
     <div class="section overview">
     <h2><i class="fas fa-binoculars icon-text"></i>Game overview</h2>
-        <p>This is a multiplayer game with a total of <strong>{{ group_size }} players</strong>, spanning <strong>{{ Constants.num_rounds }} rounds</strong>.
+        <p>This is a multiplayer game with a total of <strong>{{ group_size }} players</strong>, spanning between <strong>10-15 rounds</strong>.
         Players are connected through a network and will interact with their neighbors—the ones directly linked to them.
         You have <strong>{{ degree }}
     {% if degree == 1 %}
@@ -163,10 +161,11 @@
         Some players prefer red, while others prefer blue. One group holds a majority, but you don't know which one.</p>
 
     {% if role == Constants.majority_role %}
-        <p>In this game, you prefer red, but your main objective is to coordinate your shirt choice with your neighbors.
+        <p>In this game, <strong>you prefer red</strong>, but your main objective is to coordinate your shirt choice with your neighbors.
             Every round, you earn points for choosing your preferred color, but the key to maximizing your rewards is aligning your choice with your neighbors.
             The more neighbors who match your shirt color in that round, the more points you earn.
-            Below, you will find tables displaying the fixed rewards for each shirt choice and the variable rewards you can earn per round based on the number of neighbors you coordinate with.</p>
+            Below, you will find tables displaying the fixed rewards for each shirt choice and the variable rewards you can earn per round based on the number of neighbors you coordinate with.
+        Players with the same preferred color share the same reward structure.</p>
 
         <h3 style="font-size: 1rem;"><b>Table 1.</b> Fixed rewards for shirt choices</h3>
         <div class="table-container">
@@ -220,7 +219,7 @@
             </table>
         </div>
     {% else %}
-        <p>In this game, <strong>you prefer blue</strong>.  Below, you will find a table displaying the fixed rewards for each shirt choice.
+        <p>In this game, <strong>you prefer blue</strong>.  Below, you will find a table displaying the fixed rewards for each shirt choice.  Players with the same preferred color share the same reward structure.
 
         <h3 style="font-size: 1rem;"><b>Table 1.</b> Fixed rewards for shirt choices</h3>
         <div class="table-container">
@@ -250,6 +249,13 @@
         </div>
         <br>
     {% endif %}
+        <br>
+        <p>At the end of the game, points will be converted into euros ({% if role == Constants.majority_role %}{{Constants.points_per_euro_majority}}
+             {% else %}{{Constants.points_per_euro_minority}}
+              {% endif %}
+            points = £1). You will always receive at least £{{ Constants.base_payment }}, even if your points would convert to less.
+            You cannot earn more than £{{ Constants.max_payment }}, even if your points would convert to more.</p>
+
 </div>
 
     <div class="section stages">
@@ -275,16 +281,26 @@
         <p><b>Phase 3</b> <i class="fa fa-piggy-bank"></i> <i>Rewards</i></p>
         <p>You see a breakdown of your rewards, calculated based on your preference and coordination with your neighbors.</p>
 
+          <div class="alert alert-warning" style="font-weight: bold; margin-top: 10px;">
+        <i class="fas fa-exclamation-triangle"></i>
+        At times, you might have to wait while other players decide. Don’t worry — the game will move forward as soon as all players have submitted their choices.
+    </div>
+
     </div>
 
  <div class="section introduction">
-        <h2 class="stages-header"><i class="fas fa-clock"></i> Time per Round</h2>
-     <p>In each round, you will have <strong>{{ Constants.other_pages_timeout_seconds }} seconds</strong> to select a t-shirt. After that, you will have another {{ Constants.other_pages_timeout_seconds }} seconds to view the choices made by your neighbors.
-            Pay close attention! If you do not make a selection within the allotted time, the game will end for you.  Sometimes, other players in your group may drop out and stop participating. This will be indicated by
+    <h2 class="stages-header"><i class="fas fa-clock"></i> Time per Round</h2>
+    <p>
+        In each round, you will have <strong>{{ Constants.other_pages_timeout_seconds }} seconds</strong>
+        to select a t-shirt. After that, you will have another {{ Constants.other_pages_timeout_seconds }} seconds
+        to view the choices made by your neighbors. Pay close attention! If you do not make a selection within the allotted time,
+        the game will end for you. Sometimes, other players in your group may drop out and stop participating.
+        This will be indicated by
         <span class="shirt-icon" style="color: #6c757d;">
             <i class="fas fa-times-circle"></i>
-        </span></p>
-    </div>
+        </span>
+    </p>
+</div>
 
 
     <div class="encouragement">
