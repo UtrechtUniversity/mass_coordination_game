@@ -28,7 +28,7 @@ class PaymentInfo(Page):
 
     def is_displayed(player):
         participant = player.participant
-        return #participant.consent == True #@RF: UNCOMMENT! (For testing, where consentpage is not included)
+        return participant.consent == True
 
     @staticmethod
     def js_vars(player):

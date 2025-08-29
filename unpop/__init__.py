@@ -744,7 +744,7 @@ class FailedGamePage(Page):
         return player.group.failed or (player.participant.is_dropout and player.round_number == Constants.num_rounds)
 
 page_sequence = [IntroductionPage,
-                 #ComprehensionPage,
+                 ComprehensionPage,
                  DecisionPage,
                  ResultsWaitPage,
                  ResultsPage,
