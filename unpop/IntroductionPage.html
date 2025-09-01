@@ -264,19 +264,8 @@
         <p>At the beginning of each round, you decide whether to wear a blue or red shirt by tapping the corresponding button.
             The reward tables remain visible during this phase. You also have the opportunity to recall what your neighbors decided in the prior round.</p>
 
-        {% if punishment_condition %}
-        <p><b>Phase 2</b> <i class="fa-solid fa-hammer"></i> <i>Assign punishment points</i></p>
-            <p>You receive an overview of your choice and your neighbors' choices for this round.</p>
-            <p>Players can choose to reduce the earnings of their neighbors by assigning punishment points.
-                However, this comes at a cost! These costs increase as you assign more punishment points to another player.
-                You can assign between 0 and 10 punishment points to each neighbor.
-                The table below shows the costs of assigning punishment points to a player for the punisher and the
-                corresponding reduction in the earnings of the punished player. </p>
-        {% else %}
-
         <p><b>Phase 2</b> <i class="fa fa-users"></i> <i>Group overview</i></p>
         <p>You receive an overview of your choice and your neighbors' choices for this round.</p>
-        {% endif %}
 
         <p><b>Phase 3</b> <i class="fa fa-piggy-bank"></i> <i>Rewards</i></p>
         <p>You see a breakdown of your rewards, calculated based on your preference and coordination with your neighbors.</p>
