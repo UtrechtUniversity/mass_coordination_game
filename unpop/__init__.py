@@ -309,6 +309,8 @@ class IntroductionPage(Page):
             degree=degree,
             range_neighbors=list(range(degree + 1)),
             table_data=table_data,
+            base = "{:.2f}".format(Constants.base_payment),
+            max="{:.2f}".format(Constants.max_payment),
             )
 
     def is_displayed(player):
