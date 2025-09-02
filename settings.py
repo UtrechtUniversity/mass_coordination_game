@@ -10,7 +10,7 @@ SESSION_CONFIGS = [
         network_condition="test_n20",
         app_sequence=["consent", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED',
-        # use_browser_bots=True
+        use_browser_bots=False
     ),
 
 
@@ -21,7 +21,7 @@ SESSION_CONFIGS = [
         #network_condition = "test_n20",
         app_sequence=["consent", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED',
-        #use_browser_bots=True
+        use_browser_bots=False
     ),
 ]
 
