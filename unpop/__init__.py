@@ -482,7 +482,7 @@ class FailedGamePage(Page):
 page_sequence = [
     NetworkFormationWaitPage,
     IntroductionPage,
-    ComprehensionPage,
+    #ComprehensionPage,
     DecisionPage,
     ResultsWaitPage,
     ResultsPage,
