@@ -3,6 +3,7 @@ import json
 import os
 import math
 import random
+import time
 
 doc = """
 “The spread of an unpopular norm in a social network experiment"
@@ -12,7 +13,7 @@ class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None  # one session constitutes one group.
-    num_rounds = 12
+    num_rounds = 10
     # Roles
     majority_role = 'Red'
     minority_role = 'Blue'
@@ -38,20 +39,14 @@ class Constants(BaseConstants):
     base_payment = 2.5
     max_payment = 5.5
 
-
 class Subsession(BaseSubsession):
     pass
 
-
 def creating_session(subsession):
-    """
-    Keep minimal setup here. Network formation is now done in NetworkFormationWaitPage.
-    """
     if subsession.round_number == 1:
         for p in subsession.get_players():
             # initialize dropout flag early
             p.participant.is_dropout = False
-
 
 class Player(BasePlayer):
     choice = models.BooleanField(
@@ -72,7 +67,6 @@ class Player(BasePlayer):
     payoff_blue_zero = models.IntegerField()
     payoff_red_half = models.IntegerField()
     payoff_blue_half = models.IntegerField()
-
 
 class Group(BaseGroup):
     failed = models.BooleanField(initial=False)
@@ -129,9 +123,6 @@ class Group(BaseGroup):
 
             player.payoff = max(utility, 0)
 
-
-# ----------------- Helper functions -------------------
-
 def timeout_check(player, timeout_happened):
     participant = player.participant
     groupsize = len(player.subsession.get_players())
@@ -152,11 +143,15 @@ def timeout_time(player, timeout_seconds):
     else:
         return timeout_seconds
 
-
-# ----------------- Pages -------------------
-
 class NetworkFormationWaitPage(WaitPage):
     wait_for_all_groups = True
+
+    title_text = "Setting up the network ..."
+    body_text = "Please wait while others join."
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
 
     @staticmethod
     def after_all_players_arrive(subsession):
@@ -476,8 +471,6 @@ class FailedGamePage(Page):
     def is_displayed(player):
         return player.group.failed or (player.participant.is_dropout and player.round_number == Constants.num_rounds)
 
-
-# ----------------- Page sequence -------------------
 
 page_sequence = [
     NetworkFormationWaitPage,
