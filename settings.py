@@ -10,18 +10,18 @@ SESSION_CONFIGS = [
         network_condition="test_n20",
         app_sequence=["consent", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED',
-        # use_browser_bots=True
+        use_browser_bots=False
     ),
-
 
     dict(
         name="unpopular_norm_flexible",
         display_name="test_flex",
-        num_demo_participants=3,
+        num_demo_participants=50,
         #network_condition = "test_n20",
-        app_sequence=["consent", "unpop", "survey", "reward", "exit"],
+        #app_sequence=["consent", "unpop", "survey", "reward", "exit"],
+        app_sequence=["consent", "unpop"],
         completionlink='https://app.prolific.com/submissions/complete?cc=C104VFED',
-        #use_browser_bots=True
+        use_browser_bots=True
     ),
 ]
 
