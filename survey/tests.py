@@ -5,6 +5,7 @@ class PlayerBot(Bot):
         answers = {
             'enjoyment': 4,  # "Very"
             'clarity': 4,    # "Clear"
+            'majority': 1,
             'perceived_rq': "I think the experiment studies social coordination.",
             'comments': "No additional comments."
         }

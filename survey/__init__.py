@@ -13,7 +13,6 @@ class Constants(BaseConstants):
     majority_role = 'Red'
 
 
-
 class Subsession(BaseSubsession):
     pass
 
@@ -31,6 +30,18 @@ class Player(BasePlayer):
     clarity = models.IntegerField(
         choices=[[1, 'Very unclear'], [2, 'Unclear'], [3, 'Neutral'], [4, 'Clear'], [5, 'Very clear']],
         label="How clear were the instructions?",
+        widget=widgets.RadioSelect
+    )
+
+    majority = models.IntegerField(
+        choices=[
+            [1, 'Red'],
+            [2, 'Blue'],
+            [3, "Don't know"]
+        ],
+        label= "Earlier, we told you that players either preferred red or blue, "
+              "with one group being larger (the majority) and the other smaller (the minority). " 
+                "Which group do you think was the majority?",
         widget=widgets.RadioSelect
     )
 
@@ -55,15 +66,10 @@ class Questionnaire(Page):
 
     @staticmethod
     def get_form_fields(player: Player):
-        fields = ['enjoyment', 'clarity', 'perceived_rq', 'comments']
+        fields = ['enjoyment', 'clarity', 'majority', 'perceived_rq', 'comments']
         if player.participant.role == Constants.majority_role:
             fields.insert(2, 'strategy') # ask question about strategy only to majority members.
         return fields
 
 page_sequence = [Questionnaire]
 
-
-
-
-
-page_sequence = [Questionnaire]
