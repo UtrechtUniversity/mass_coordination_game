@@ -25,8 +25,8 @@ class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None
-    group_size = 5
-    num_rounds = 3
+    group_size = 100
+    num_rounds = 10
     majority_role = 'Red'
     minority_role = 'Blue'
     s = 15
@@ -242,13 +242,13 @@ class IntroductionPage(Page):
                 and not player.participant.vars.get("exit_early", False)
         )
 
-
     def get_timeout_seconds(player):
         return timeout_time(player, Constants.introduction_timeout_seconds)
 
     def before_next_page(player, timeout_happened):
         timeout_check(player, timeout_happened)
         player.prolific_id = player.participant.label
+
 class ComprehensionPage(Page):
     form_model = 'player'
     form_fields = ['q_red_zero', 'q_blue_zero', 'q_red_half', 'q_blue_half']
@@ -463,7 +463,6 @@ class FinalGameResults(Page):
             bonus="{:.2f}".format(bonus),
             euros="{:.2f}".format(euros),
         )
-
 
 class FailedGamePage(Page):
     def vars_for_template(player):
