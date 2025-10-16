@@ -3,55 +3,56 @@ import json
 import os
 import math
 import random
+import logging
+from .functions import compute_utility, payoff_table
 
 doc = """
 “The spread of an unpopular norm in a social network experiment"
+
+Add description
+
 """
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+if not logger.handlers:
+    fh = logging.FileHandler("otree_log.txt", encoding="utf-8")
+    fh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+    logger.addHandler(fh)
 
 class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
-    players_per_group = None  # one session constitutes one group.
-    num_rounds = 12
-    # Roles
+    players_per_group = None
+    group_size = 5
+    num_rounds = 3
     majority_role = 'Red'
     minority_role = 'Blue'
-    # fixed rewards for following one's private norm
-    s = 15  # for majority
-    e = 10  # for minority (e>0)
-    # minority receives variable rewards for coordinating with neighbors
-    z = 50  # for coordinating with the minority
-    w = 40  # for coordinating with the majority
-    # diminishing returns on coordination
+    s = 15
+    e = 10
+    z = 50
+    w = 40  #
     lambda1 = 4.3
     lambda2 = 1.8
     min_group_participation = 0.5
     introduction_timeout_seconds = 420
     comprehension_timeout_seconds = 180
     other_pages_timeout_seconds = 120
-    # network defaults
     density = .30
     min_prop = .30
-    # rewards
     points_per_euro_majority = 85
     points_per_euro_minority = 22
     base_payment = 2.5
     max_payment = 5.5
 
-
 class Subsession(BaseSubsession):
-    pass
-
-
-def creating_session(subsession):
-    """
-    Keep minimal setup here. Network formation is now done in NetworkFormationWaitPage.
-    """
-    if subsession.round_number == 1:
-        for p in subsession.get_players():
-            # initialize dropout flag early
-            p.participant.is_dropout = False
-
+    def creating_session(self):
+        if self.round_number == 1:
+            for p in self.get_players():
+                p.participant.is_dropout = False
+        else:
+            self.group_like_round(1)
 
 class Player(BasePlayer):
     choice = models.BooleanField(
@@ -72,7 +73,6 @@ class Player(BasePlayer):
     payoff_blue_zero = models.IntegerField()
     payoff_red_half = models.IntegerField()
     payoff_blue_half = models.IntegerField()
-
 
 class Group(BaseGroup):
     failed = models.BooleanField(initial=False)
@@ -102,35 +102,13 @@ class Group(BaseGroup):
                 neighbor_player = next(p for p in players if p.participant.node == neighbor_id)
                 neighbor_choices.append(neighbor_player.choice)
 
-            blue_neighbors = neighbor_choices.count(True)
-            red_neighbors = neighbor_choices.count(False)
-
-            utility = 0
-            if player.participant.role == Constants.minority_role:
-                if my_choice:
-                    utility = Constants.e
-                else:
-                    utility = 0
-            elif player.participant.role == Constants.majority_role:
-                num_nbh = len(neighbors)
-                if num_nbh > 0:
-                    if my_choice:
-                        utility = Constants.z * (1 - math.exp(-Constants.lambda1 * (blue_neighbors / num_nbh))) / (
-                                1 - math.exp(-Constants.lambda1))
-                    else:
-                        utility = Constants.s + Constants.w * (
-                                    1 - math.exp(-Constants.lambda2 * (red_neighbors / num_nbh))) / (
-                                          1 - math.exp(-Constants.lambda2))
-                else:
-                    if my_choice:
-                        utility = 0
-                    else:
-                        utility = Constants.s
+            utility = compute_utility(
+                player_choice=my_choice,
+                player_role=player.participant.role,
+                neighbors_choices=neighbor_choices,
+            )
 
             player.payoff = max(utility, 0)
-
-
-# ----------------- Helper functions -------------------
 
 def timeout_check(player, timeout_happened):
     participant = player.participant
@@ -152,15 +130,43 @@ def timeout_time(player, timeout_seconds):
     else:
         return timeout_seconds
 
+def group_by_arrival_time_method(subsession, waiting_players):
+    logger.info("Entered group_by_arrival_time_method")
+    group_size = Constants.group_size
 
-# ----------------- Pages -------------------
+    if not subsession.session.vars.get("group_formed", False):
+        if len(waiting_players) >= group_size:
+            logger.info(f"Creating the one and only group of {group_size} players.")
+            subsession.session.vars["group_formed"] = True
+            return waiting_players[:group_size]
+        else:
+            logger.info(
+                f"Not enough players yet ({len(waiting_players)}/{group_size}) to create the group."
+            )
+            return
+    else:
+        # mark excess players as dropouts and let them continue to ExitPage
+        for p in waiting_players:
+            p.participant.vars["exit_early"] = True
+            p.participant.is_dropout = True
+        return waiting_players
 
 class NetworkFormationWaitPage(WaitPage):
-    wait_for_all_groups = True
+    group_by_arrival_time = True
+
+    title_text = "Please wait"
+    body_text = (
+        "Waiting for others to join...<br><br>"
+        "<b>Please stay on this page.</b> If you switch tabs or windows, you’ll become inactive "
+        "and won’t be grouped until you return."
+    )
+
+    def is_displayed(player):
+        return player.round_number == 1
 
     @staticmethod
-    def after_all_players_arrive(subsession):
-        players = [p for p in subsession.get_players() if p.participant.vars.get("consent", False)]
+    def after_all_players_arrive(group):
+        players = [p for p in group.get_players() if p.participant.vars.get("consent", False)]
         num_players = len(players)
         if num_players == 0:
             return
@@ -180,12 +186,12 @@ class NetworkFormationWaitPage(WaitPage):
             # add extra edges
             for i in range(n):
                 for j in range(i + 1, n):
-                    if adj_matrix[i][j] == 0 and random.random() < Constants.density:
+                    if adj_matrix[i][j] == 0 and random.random() < edge_prob:
                         adj_matrix[i][j] = 1
                         adj_matrix[j][i] = 1
             return adj_matrix
 
-        net_condition = subsession.session.config.get("network_condition")
+        net_condition = group.session.config.get("network_condition")
         if net_condition:
             file_path = os.path.join("networks", f"network_{net_condition}.json")
             with open(file_path, 'r') as f:
@@ -209,19 +215,13 @@ class NetworkFormationWaitPage(WaitPage):
             player.participant.is_dropout = False
             player.participant.adj_matrix = adj_matrix
 
-
 class IntroductionPage(Page):
     def vars_for_template(player):
         adj_matrix = player.participant.adj_matrix
         my_node = player.id_in_group
         degree = sum(adj_matrix[my_node - 1])
 
-        table_data = []
-        for n in range(degree + 1):
-            p = n / degree
-            zstar = Constants.z * (1 - math.exp(-Constants.lambda1 * p)) / (1 - math.exp(-Constants.lambda1))
-            wstar = Constants.w * (1 - math.exp(-Constants.lambda2 * p)) / (1 - math.exp(-Constants.lambda2))
-            table_data.append({'c_n': n, 'zstar': round(zstar), 'wstar': round(wstar)})
+        table_data = payoff_table(degree)
 
         return dict(
             role=player.participant.role,
@@ -229,14 +229,19 @@ class IntroductionPage(Page):
             punishment_condition=player.session.config.get("punishment_condition"),
             group_size=len(player.subsession.get_players()),
             degree=degree,
-            range_neighbors=list(range(degree + 1)),
+            range_neighbors=list(range(degree + 1)) if degree > 0 else [],
             table_data=table_data,
             base="{:.2f}".format(Constants.base_payment),
             max="{:.2f}".format(Constants.max_payment),
         )
 
     def is_displayed(player):
-        return player.round_number == 1
+        return (
+                player.round_number == 1
+                and not player.participant.is_dropout
+                and not player.participant.vars.get("exit_early", False)
+        )
+
 
     def get_timeout_seconds(player):
         return timeout_time(player, Constants.introduction_timeout_seconds)
@@ -244,26 +249,24 @@ class IntroductionPage(Page):
     def before_next_page(player, timeout_happened):
         timeout_check(player, timeout_happened)
         player.prolific_id = player.participant.label
-
-
 class ComprehensionPage(Page):
     form_model = 'player'
     form_fields = ['q_red_zero', 'q_blue_zero', 'q_red_half', 'q_blue_half']
 
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.role == Constants.majority_role
+        return (
+                player.round_number == 1
+                and player.participant.role == Constants.majority_role
+                and not player.participant.is_dropout
+                and not player.participant.vars.get("exit_early", False)
+        )
 
     def vars_for_template(player):
         adj_matrix = player.participant.adj_matrix
         my_node = player.id_in_group - 1
         degree = sum(adj_matrix[my_node])
 
-        table_data = []
-        for n in range(degree + 1):
-            p = n / degree
-            zstar = Constants.z * (1 - math.exp(-Constants.lambda1 * p)) / (1 - math.exp(-Constants.lambda1))
-            wstar = Constants.w * (1 - math.exp(-Constants.lambda2 * p)) / (1 - math.exp(-Constants.lambda2))
-            table_data.append({'c_n': n, 'zstar': round(zstar), 'wstar': round(wstar)})
+        table_data = payoff_table(degree)
 
         blue_neighbors = degree
         red_neighbors = 0
@@ -311,7 +314,6 @@ class ComprehensionPage(Page):
     def before_next_page(player, timeout_happened):
         timeout_check(player, timeout_happened)
 
-
 class DecisionPage(Page):
     form_model = 'player'
     form_fields = ['choice']
@@ -323,19 +325,14 @@ class DecisionPage(Page):
         timeout_check(player, timeout_happened)
 
     def is_displayed(player):
-        return not player.group.failed and not player.participant.is_dropout
+        return not player.group.failed and not player.participant.is_dropout and not player.participant.vars.get("exit_early", False)
 
     def vars_for_template(player):
         adj_matrix = player.participant.adj_matrix
         my_node = player.id_in_group
         degree = sum(adj_matrix[my_node - 1])
 
-        table_data = []
-        for n in range(degree + 1):
-            p = n / degree
-            zstar = Constants.z * (1 - math.exp(-Constants.lambda1 * p)) / (1 - math.exp(-Constants.lambda1))
-            wstar = Constants.w * (1 - math.exp(-Constants.lambda2 * p)) / (1 - math.exp(-Constants.lambda2))
-            table_data.append({'c_n': n, 'zstar': round(zstar), 'wstar': round(wstar)})
+        table_data = payoff_table(degree)
 
         num_blue_previous_round = 0
         num_red_previous_round = 0
@@ -371,13 +368,12 @@ class DecisionPage(Page):
             num_red_previous_round=num_red_previous_round,
         )
 
-
 class ResultsWaitPage(WaitPage):
     def after_all_players_arrive(group):
         group.set_first_stage_earnings()
 
     def is_displayed(player):
-        return not player.group.failed and not player.participant.is_dropout
+        return not player.group.failed and not player.participant.is_dropout and not player.participant.vars.get("exit_early", False)
 
 
 class ResultsPage(Page):
@@ -420,7 +416,7 @@ class ResultsPage(Page):
         )
 
     def is_displayed(player):
-        return not player.group.failed and not player.participant.is_dropout
+        return not player.group.failed and not player.participant.is_dropout and not player.participant.vars.get("exit_early", False)
 
     def get_timeout_seconds(player):
         return timeout_time(player, Constants.other_pages_timeout_seconds)
@@ -476,8 +472,19 @@ class FailedGamePage(Page):
     def is_displayed(player):
         return player.group.failed or (player.participant.is_dropout and player.round_number == Constants.num_rounds)
 
+class ExitPage(Page):
+    """
+    Displayed to participants who arrive after the main group is full.
+    """
+    def is_displayed(player):
+        return player.participant.vars.get("exit_early", False)
 
-# ----------------- Page sequence -------------------
+    def vars_for_template(player):
+        return dict(
+            message="Unfortunately, the group for this session is already full. "
+                    "You will not be participating in the experiment this time. "
+                    "Please return to Prolific to complete your submission."
+        )
 
 page_sequence = [
     NetworkFormationWaitPage,
@@ -488,4 +495,5 @@ page_sequence = [
     ResultsPage,
     FinalGameResults,
     FailedGamePage,
+    ExitPage,
 ]

@@ -1,5 +1,4 @@
 import datetime
-
 from otree.api import *
 
 
@@ -40,7 +39,7 @@ class ConsentPage(Page):
             player.consent_timestamp = datetime.datetime.now().isoformat()
         else:
             player.participant.is_dropout = True
-        player.participant.consent = player.consent
+        player.participant.vars['consent'] = player.consent
 
 #def app_after_this_page(player, upcoming_apps):
 #        if not player.consent:

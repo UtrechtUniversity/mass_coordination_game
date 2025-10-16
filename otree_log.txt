@@ -1,0 +1,13 @@
+2025-10-16 20:24:34,185 - INFO - Entered group_by_arrival_time_method
+2025-10-16 20:24:34,186 - INFO - Not enough players yet (1/5) to create the group.
+2025-10-16 20:24:38,013 - INFO - Entered group_by_arrival_time_method
+2025-10-16 20:24:38,014 - INFO - Not enough players yet (2/5) to create the group.
+2025-10-16 20:24:38,574 - INFO - Entered group_by_arrival_time_method
+2025-10-16 20:24:38,575 - INFO - Not enough players yet (2/5) to create the group.
+2025-10-16 20:24:41,586 - INFO - Entered group_by_arrival_time_method
+2025-10-16 20:24:41,587 - INFO - Not enough players yet (3/5) to create the group.
+2025-10-16 20:24:44,887 - INFO - Entered group_by_arrival_time_method
+2025-10-16 20:24:44,888 - INFO - Not enough players yet (4/5) to create the group.
+2025-10-16 20:24:48,261 - INFO - Entered group_by_arrival_time_method
+2025-10-16 20:24:48,262 - INFO - Creating the one and only group of 5 players.
+2025-10-16 20:24:53,152 - INFO - Entered group_by_arrival_time_method
