@@ -5,6 +5,7 @@ SESSION_CONFIGS = [
         name="unpopular_norm_flexible",
         display_name="test_flex",
         num_demo_participants=50,
+        group_size=10,
         #network_condition = "test_n20",
         #app_sequence=["consent", "unpop", "survey", "reward"],
         app_sequence=["consent", "unpop"],

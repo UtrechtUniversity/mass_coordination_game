@@ -25,14 +25,13 @@ class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None
-    group_size = 100
     num_rounds = 10
     majority_role = 'Red'
     minority_role = 'Blue'
     s = 15
     e = 10
     z = 50
-    w = 40  #
+    w = 40
     lambda1 = 4.3
     lambda2 = 1.8
     min_group_participation = 0.5
@@ -122,7 +121,6 @@ def timeout_check(player, timeout_happened):
     if groupsize - player.group.inactive_players < round(groupsize * Constants.min_group_participation):
         player.group.failed = True
 
-
 def timeout_time(player, timeout_seconds):
     participant = player.participant
     if participant.is_dropout or player.group.failed:
@@ -132,7 +130,7 @@ def timeout_time(player, timeout_seconds):
 
 def group_by_arrival_time_method(subsession, waiting_players):
     logger.info("Entered group_by_arrival_time_method")
-    group_size = Constants.group_size
+    group_size = subsession.session.config['group_size']
 
     if not subsession.session.vars.get("group_formed", False):
         if len(waiting_players) >= group_size:
@@ -220,7 +218,6 @@ class IntroductionPage(Page):
         adj_matrix = player.participant.adj_matrix
         my_node = player.id_in_group
         degree = sum(adj_matrix[my_node - 1])
-
         table_data = payoff_table(degree)
 
         return dict(
@@ -265,7 +262,6 @@ class ComprehensionPage(Page):
         adj_matrix = player.participant.adj_matrix
         my_node = player.id_in_group - 1
         degree = sum(adj_matrix[my_node])
-
         table_data = payoff_table(degree)
 
         blue_neighbors = degree
