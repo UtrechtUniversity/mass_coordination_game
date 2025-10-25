@@ -144,3 +144,7 @@
 2025-10-17 14:05:33,779 - INFO - Entered group_by_arrival_time_method
 2025-10-17 14:05:34,474 - INFO - Entered group_by_arrival_time_method
 2025-10-17 14:05:35,191 - INFO - Entered group_by_arrival_time_method
+2025-10-20 11:12:31,235 - INFO - Entered group_by_arrival_time_method
+2025-10-20 11:12:31,306 - INFO - Not enough players yet (1/10) to create the group.
+2025-10-20 11:12:31,507 - INFO - Entered group_by_arrival_time_method
+2025-10-20 11:12:31,510 - INFO - Not enough players yet (1/10) to create the group.

@@ -371,7 +371,6 @@ class ResultsWaitPage(WaitPage):
     def is_displayed(player):
         return not player.group.failed and not player.participant.is_dropout and not player.participant.vars.get("exit_early", False)
 
-
 class ResultsPage(Page):
     def vars_for_template(player):
         my_choice = player.choice
@@ -419,7 +418,6 @@ class ResultsPage(Page):
 
     def before_next_page(player, timeout_happened):
         timeout_check(player, timeout_happened)
-
 
 class FinalGameResults(Page):
     @staticmethod
