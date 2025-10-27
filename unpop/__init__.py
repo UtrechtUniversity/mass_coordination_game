@@ -25,7 +25,7 @@ class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None
-    num_rounds = 10
+    num_rounds = 2
     majority_role = 'Red'
     minority_role = 'Blue'
     s = 15
