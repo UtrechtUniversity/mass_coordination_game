@@ -1,0 +1,25 @@
+{% extends "otree/WaitPage.html" %}
+
+{% block content %}
+<p>Waiting for the other players.</p>
+<p id="refresh-msg" style="margin-top: 10px; font-style: italic; color: gray;">
+        Refreshing in <span id="countdown">10</span> seconds ...
+    </p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let seconds = 10;
+    const countdownEl = document.getElementById('countdown');
+
+    setInterval(function() {
+        window.location.reload();
+    }, 10000);
+
+    setInterval(function() {
+        seconds--;
+        if (seconds < 0) seconds = 10;
+        countdownEl.textContent = seconds;
+    }, 1000);
+</script>
+{% endblock %}

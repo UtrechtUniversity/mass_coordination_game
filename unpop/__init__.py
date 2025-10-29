@@ -4,7 +4,8 @@ import os
 import math
 import random
 import logging
-from .functions import compute_utility, payoff_table
+import datetime
+from .functions import compute_utility, payoff_table # import custom functions
 
 doc = """
 “The spread of an unpopular norm in a social network experiment"
@@ -12,20 +13,30 @@ doc = """
 Add description
 
 """
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+log_dir = "otree_log"
+os.makedirs(log_dir, exist_ok=True)
+log_filename = os.path.join( log_dir, f"otree_log_{datetime.datetime.now():%Y-%m-%d_%H-%M-%S}.txt" )
 
 if not logger.handlers:
-    fh = logging.FileHandler("otree_log.txt", encoding="utf-8")
-    fh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+    fh = logging.FileHandler(log_filename, encoding="utf-8")
+    formatter = logging.Formatter("%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+                                  datefmt="%Y-%m-%d %H:%M:%S", )
+    fh.setFormatter(formatter)
     logger.addHandler(fh)
+
+def log_event(player, event, extra=""):
+    logger.info( f"[R{player.round_number:02d}] " 
+                 f"P{player.id_in_group} ({player.participant.label}) | "
+                 f"{event} {extra}"
+                 )
 
 class Constants(BaseConstants):
     title = "The Fashion Dilemma"
     name_in_url = "fashion_dilemma"
     players_per_group = None
-    num_rounds = 2
+    num_rounds = 6
     majority_role = 'Red'
     minority_role = 'Blue'
     s = 15
@@ -49,7 +60,7 @@ class Subsession(BaseSubsession):
     def creating_session(self):
         if self.round_number == 1:
             for p in self.get_players():
-                p.participant.is_dropout = False
+                p.participant.is_dropout = False # set dropout flag to False at initiation
         else:
             self.group_like_round(1)
 
@@ -59,7 +70,6 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect,
         choices=[(True, 'Blue'), (False, 'Red')],
     )
-    inactive = models.BooleanField(initial=False)
     prolific_id = models.StringField(default=str(" "))
 
     # comprehension questions
@@ -74,8 +84,8 @@ class Player(BasePlayer):
     payoff_blue_half = models.IntegerField()
 
 class Group(BaseGroup):
-    failed = models.BooleanField(initial=False)
-    inactive_players = models.IntegerField(initial=0)
+    failed = models.BooleanField(initial=False) # keep a flag for whether the group failed
+    inactive_players = models.IntegerField(initial=0) # count number of dropouts
 
     def set_first_stage_earnings(self):
         players = self.get_players()
@@ -111,19 +121,34 @@ class Group(BaseGroup):
 
 def timeout_check(player, timeout_happened):
     participant = player.participant
-    groupsize = len(player.subsession.get_players())
+    session = player.session
+    group = player.group
+    groupsize = session.config.get('group_size', len(group.get_players()))
+
+    # initialize session-level dropout tracker if not present
+    if 'inactive_count' not in session.vars:
+        session.vars['inactive_count'] = 0
 
     if timeout_happened and not participant.is_dropout:
-        player.group.inactive_players += 1
-        player.inactive = True
         participant.is_dropout = True
+        session.vars['inactive_count'] += 1
+        group.inactive_players = session.vars['inactive_count']
+        log_event(player, "DROPPED OUT", f"Inactive {group.inactive_players}/{groupsize}")
 
-    if groupsize - player.group.inactive_players < round(groupsize * Constants.min_group_participation):
-        player.group.failed = True
+    # fail group if threshold reached
+    active_count = groupsize - group.inactive_players
+    threshold = round(groupsize * Constants.min_group_participation)
+    if active_count <= threshold and not group.failed:
+        group.failed = True
+        session.vars['group_failed'] = True
+        logger.warning(
+            f"[R{player.round_number:02d}] GROUP FAILURE — only {active_count}/{groupsize} active "
+            f"(<={Constants.min_group_participation * 100:.0f}% threshold)"
+        )
 
 def timeout_time(player, timeout_seconds):
     participant = player.participant
-    if participant.is_dropout or player.group.failed:
+    if participant.is_dropout or player.group.failed or player.session.vars.get('group_failed', False):
         return 1
     else:
         return timeout_seconds
@@ -224,7 +249,7 @@ class IntroductionPage(Page):
             role=player.participant.role,
             network_condition=player.session.config.get("network_condition"),
             punishment_condition=player.session.config.get("punishment_condition"),
-            group_size=len(player.subsession.get_players()),
+            group_size=player.session.config['group_size'],
             degree=degree,
             range_neighbors=list(range(degree + 1)) if degree > 0 else [],
             table_data=table_data,
@@ -321,7 +346,11 @@ class DecisionPage(Page):
         timeout_check(player, timeout_happened)
 
     def is_displayed(player):
-        return not player.group.failed and not player.participant.is_dropout and not player.participant.vars.get("exit_early", False)
+        return (
+                not player.group.failed
+                and not player.participant.is_dropout
+                and not player.participant.vars.get("exit_early", False)
+        )
 
     def vars_for_template(player):
         adj_matrix = player.participant.adj_matrix
@@ -365,11 +394,21 @@ class DecisionPage(Page):
         )
 
 class ResultsWaitPage(WaitPage):
-    def after_all_players_arrive(group):
-        group.set_first_stage_earnings()
-
+    template_name = 'unpop/ResultsWaitPage.html'
     def is_displayed(player):
-        return not player.group.failed and not player.participant.is_dropout and not player.participant.vars.get("exit_early", False)
+        return (
+                not (player.group.failed or player.session.vars.get('group_failed', False))
+                and not player.participant.is_dropout
+                and not player.participant.vars.get("exit_early", False)
+        )
+
+    def after_all_players_arrive(group):
+        if not (group.failed or group.session.vars.get('group_failed', False)):
+            group.set_first_stage_earnings()
+
+    @staticmethod
+    def get_timeout_seconds(player):
+        return 5
 
 class ResultsPage(Page):
     def vars_for_template(player):
@@ -411,7 +450,11 @@ class ResultsPage(Page):
         )
 
     def is_displayed(player):
-        return not player.group.failed and not player.participant.is_dropout and not player.participant.vars.get("exit_early", False)
+        return (
+                not player.group.failed
+                and not player.participant.is_dropout
+                and not player.participant.vars.get("exit_early", False)
+        )
 
     def get_timeout_seconds(player):
         return timeout_time(player, Constants.other_pages_timeout_seconds)
@@ -426,6 +469,7 @@ class FinalGameResults(Page):
             player.round_number == Constants.num_rounds
             and not player.group.failed
             and not player.participant.is_dropout
+            and not player.participant.vars.get("exit_early", False)
         )
 
     @staticmethod
