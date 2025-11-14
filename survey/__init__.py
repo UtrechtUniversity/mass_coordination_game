@@ -2,7 +2,7 @@ from otree.api import *
 
 
 doc = """
-some questions about the experiment
+After completing the experiment, participants respond to a set of survey questions.
 """
 
 

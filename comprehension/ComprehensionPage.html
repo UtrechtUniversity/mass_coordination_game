@@ -6,7 +6,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
 
-/* Page Styles */
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #eef1f5;
@@ -24,30 +23,29 @@ body {
     color: black;
 }
 
- .btn-primary {
-        font-size: 1rem;
-        color: #fff;
-        background-color: #4a86e8;
-        border: none;
-        border-radius: 30px;
-        padding: 15px 30px;
-        font-weight: 600;
-        display: inline-block;
-        transition: box-shadow 0.2s, transform 0.2s;
-    }
+.btn-primary {
+    font-size: 1rem;
+    color: #fff;
+    background-color: #4a86e8;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 30px;
+    font-weight: 600;
+    display: inline-block;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
 
-    .btn-primary:hover {
-        background-color: #3a72bb;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
-    }
-
+.btn-primary:hover {
+    background-color: #3a72bb;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
 
 .next-button-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 24px;
-    }
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
 
 .table-container {
     max-height: 300px;
@@ -102,7 +100,6 @@ h3 {
     text-align: left;
 }
 
-/* Visual representation of neighbors */
 .scenario-visual {
     margin-bottom: 10px;
     font-size: 1.1em;
@@ -129,9 +126,18 @@ input[type=number] {
         Comprehension check
     </h2>
     <p>We want to make sure you understand how your choices affect your points.</p>
-    <p>Below, we present two scenarios showing your neighbors’ choices. Please answer correctly how many points you would earn for each of your options, based on the payoff tables below.</p>
+    <p>
+    Below, we present two scenarios showing your neighbors’ choices.
+    Please answer correctly how many points you would earn for each of your options,
+    based on the payoff
+    {% if role == Constants.minority %}
+        table
+    {% else %}
+        tables
+    {% endif %}
+    below.
+</p>
 
-    <!-- Fixed rewards table -->
     <h3 style="font-size: 1rem;"><b>Table 1.</b> Fixed rewards for shirt choices</h3>
     <div class="table-container">
         <table class="table-responsive">
@@ -149,15 +155,20 @@ input[type=number] {
             <tbody>
                 <tr>
                     <td></td>
-                    <td>{{ Constants.s }} points</td>
-                    <td>0 points</td>
+                    {% if role == Constants.minority %}
+                        <td>0 points</td>
+                        <td>{{ Constants.e }} points</td>
+                    {% else %}
+                        <td>{{ Constants.s }} points</td>
+                        <td>0 points</td>
+                    {% endif %}
                 </tr>
             </tbody>
         </table>
     </div>
     <br>
 
-    <!-- Coordination rewards table -->
+    {% if role != Constants.minority %}
     <h3 style="font-size: 1rem;"><b>Table 2.</b> Coordination rewards for shirt choices</h3>
     <div class="table-container">
         <table class="table-responsive">
@@ -183,8 +194,8 @@ input[type=number] {
             </tbody>
         </table>
     </div>
+    {% endif %}
 
-    <!-- Scenario questions -->
     <form method="post">
 
         <div class="scenario-container">
@@ -223,9 +234,6 @@ input[type=number] {
         <div class="next-button-container">
             <button type="submit" class="btn btn-primary">Continue</button>
         </div>
-
-
-
 
     </form>
 

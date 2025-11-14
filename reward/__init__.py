@@ -2,7 +2,7 @@ from otree.api import *
 
 
 doc = """
-redirecting to prolific with completion code
+Finally, participants are redirected to Prolific with a completion code.
 """
 
 

@@ -17,7 +17,7 @@ def compute_utility(player_choice, player_role, neighbors_choices):
     red_neighbors = neighbors_choices.count(False)
 
     #  minority player
-    if player_role == Constants.minority_role:
+    if player_role == Constants.minority:
         return Constants.e if player_choice else 0
 
     # majority player
