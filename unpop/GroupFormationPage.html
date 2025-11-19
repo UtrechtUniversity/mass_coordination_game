@@ -1,0 +1,32 @@
+{% extends "otree/WaitPage.html" %}
+{% load otree %}
+
+{% block content %}
+<p>Waiting for others to join ...<br></p>
+<p><b>Please stay on this page.</b> If you switch tabs or windows, you’ll become inactive
+and won’t be grouped until you return.</p>
+
+<p id="refresh-msg" style="margin-top: 10px; font-style: italic; color: gray;">
+    Refreshing in <span id="countdown">30</span> seconds...
+</p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let seconds = 20;
+    const countdownEl = document.getElementById('countdown');
+
+    setInterval(function() {
+        window.location.reload();
+    }, 30000);
+
+    setInterval(function() {
+        seconds--;
+        countdownEl.textContent = seconds;
+
+        if (seconds <= 0) {
+            seconds = 30;
+        }
+    }, 1000);
+</script>
+{% endblock %}

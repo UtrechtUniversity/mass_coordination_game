@@ -287,13 +287,8 @@ def group_by_arrival_time_method(subsession, waiting_players):
 
 
 class NetworkFormationWaitPage(WaitPage):
+    template_name = "unpop/GroupFormationPage.html"
     group_by_arrival_time = True
-    title_text = "Please wait"
-    body_text = (
-        "Waiting for others to join...<br><br>"
-        "<b>Please stay on this page.</b> If you switch tabs or windows, you’ll become inactive "
-        "and won’t be grouped until you return."
-    )
 
     def is_displayed(player):
         return player.round_number == 1

@@ -23,8 +23,6 @@ dict(
         completionlink='https://app.prolific.com/submissions/complete?cc=C7NZ9ZUY',
         use_browser_bots=False,
     ),
-
-
 ]
 
 # set some central parameters to be used across apps:
