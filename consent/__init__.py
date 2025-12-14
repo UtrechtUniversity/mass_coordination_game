@@ -74,7 +74,9 @@ class ConsentPage(Page):
 
         # probability of minority assignment after quota
         if 'p_tail_minority' not in svars:
-            svars['p_tail_minority'] = Constants.p_minority
+            svars['p_tail_minority'] = 0.001  # @RF: in the in-class demonstration, we don't need a "tail probability"
+            #svars['p_tail_minority'] = Constants.p_minority #@RF: uncomment before going live!!!
+
 
         svars.setdefault('minority_assigned', 0)
 

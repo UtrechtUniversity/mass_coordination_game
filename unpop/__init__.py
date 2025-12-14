@@ -99,6 +99,7 @@ class Player(BasePlayer):
     )
     prolific_id = models.StringField(default=str(" "))
     is_dropout = models.BooleanField(initial=False)
+    bonus = models.FloatField(initial=0)
 
 class Group(BaseGroup):
     def set_first_stage_earnings(self):
@@ -494,7 +495,7 @@ class FinalGameResults(Page):
         euros = max(euros, Constants.base_payment)
         bonus = max(euros - base, 0)
 
-        player.participant.bonus = round(bonus, 2)
+        player.participant.vars['bonus'] = round(bonus, 2)
 
         return dict(
             accumulated_earnings=accumulated_earnings,
@@ -504,6 +505,9 @@ class FinalGameResults(Page):
             euros="{:.2f}".format(euros),
         )
 
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.bonus = player.participant.vars.get('bonus', 0) #replace to next page; after_arrive?
 
 class ExitPage(Page):
     """

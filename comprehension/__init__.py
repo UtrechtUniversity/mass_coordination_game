@@ -162,5 +162,5 @@ class ComprehensionPage(Page):
 
 page_sequence = [
     IntroductionPage,
-    ComprehensionPage,
+    ComprehensionPage, #only turn off for testing purposes.
                  ]

@@ -11,7 +11,6 @@ class Constants(BaseConstants):
     players_per_group = None
     num_rounds = 1
 
-
 class Subsession(BaseSubsession):
     pass
 
@@ -19,8 +18,7 @@ class Group(BaseGroup):
     pass
 
 class Player(BasePlayer):
-    pass
-
+    bonus = models.FloatField(initial=0)
 
 # PAGES
 class PaymentInfo(Page):
@@ -36,6 +34,5 @@ class PaymentInfo(Page):
             completionlink=
               player.subsession.session.config['completionlink']
         )
-    pass
 
 page_sequence = [PaymentInfo]
