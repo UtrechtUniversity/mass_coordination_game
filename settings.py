@@ -9,7 +9,7 @@ SESSION_CONFIGS = [
         group_size=100, #number of people needed to populate the network (so 10 excess players)
         network_condition="test_n100",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
-        completionlink='https://app.prolific.com/submissions/complete?cc=C7NZ9ZUY',
+        completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         use_browser_bots=False,
     ),
 
@@ -20,7 +20,7 @@ SESSION_CONFIGS = [
         group_size=100,
         network_condition = "test_n100_random",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
-        completionlink='https://app.prolific.com/submissions/complete?cc=C7NZ9ZUY',
+        completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         use_browser_bots=False,
     ),
 
@@ -31,7 +31,7 @@ SESSION_CONFIGS = [
         group_size=10,
         network_condition="test_n10",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
-        completionlink='https://app.prolific.com/submissions/complete?cc=C7NZ9ZUY',
+        completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         use_browser_bots=False,
     ),
 
@@ -42,7 +42,7 @@ SESSION_CONFIGS = [
         group_size=10,
         network_condition="test_n10_random",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
-        completionlink='https://app.prolific.com/submissions/complete?cc=C7NZ9ZUY',
+        completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         use_browser_bots=False,
     ),
 ]
