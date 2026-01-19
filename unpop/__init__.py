@@ -141,6 +141,8 @@ def timeout_check(player, timeout_happened):
     """
     If a player times out, mark them as dropout
     They will be replaced by bots
+
+    @RF when running in prodserver (but not devserver) the page always submits even if the user closes their browser
     """
     participant = player.participant
     if timeout_happened and not participant.is_dropout:

@@ -70,7 +70,7 @@ class ConsentPage(Page):
         # until the required number of minorities is reached.
         if 'quota' not in svars:
             group_size = s.config['group_size']
-            svars['quota'] = max(1, round(group_size * Constants.p_minority))
+            svars['quota'] = max(1, round(group_size * Constants.p_minority)) * 2
 
         # probability of minority assignment after quota
         if 'p_tail_minority' not in svars:
