@@ -32,7 +32,8 @@ class PaymentInfo(Page):
     def js_vars(player):
         return dict(
             completionlink=
-              player.subsession.session.config['completionlink']
+              player.subsession.session.config['completionlink'],
+
         )
 
 page_sequence = [PaymentInfo]

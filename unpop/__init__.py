@@ -523,11 +523,16 @@ class ExitPage(Page):
         return dict(
             message=(
                 "Unfortunately, the group for this session is already full. "
-                "You will not be participating in the experiment this time. "
-                "Please return to Prolific to complete your submission."
+                "You will not be participating in the experiment this time. You will still receive the base payment."
             )
         )
 
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            completionlink=
+              player.subsession.session.config['completionlink2'], #return to prolific with specific code for 'excess players'
+        )
 
 page_sequence = [
     NetworkFormationWaitPage,

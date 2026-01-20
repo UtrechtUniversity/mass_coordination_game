@@ -60,6 +60,9 @@ class Player(BasePlayer):
     payoff_red_half = models.IntegerField()
     payoff_blue_half = models.IntegerField()
 
+    #we also count the number of wrong submissions during the comprehensino check (increments per wrong submission)
+    comprehension_retries = models.IntegerField(initial=0)
+
 class IntroductionPage(Page):
 
     @staticmethod
@@ -145,6 +148,7 @@ class ComprehensionPage(Page):
                 incorrect_fields.append(labels[field_name])
 
         if incorrect_fields:
+            player.comprehension_retries += 1
             role = player.participant.role
             labels_str = ", ".join(incorrect_fields)
 
