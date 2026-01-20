@@ -10,7 +10,7 @@ SESSION_CONFIGS = [
         network_condition="test_n4",
         app_sequence=["consent", "comprehension", "unpop", "reward", "exit"], #leave out the survey for testing..
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C6C83AO6',
+        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         use_browser_bots=False,
     ),
 
@@ -22,7 +22,7 @@ SESSION_CONFIGS = [
         network_condition="test_n20",
         app_sequence=["consent", "comprehension", "unpop", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C6C83AO6',
+        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         use_browser_bots=False,
     ),
 
@@ -34,7 +34,7 @@ SESSION_CONFIGS = [
         network_condition="test_n100",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C6C83AO6',
+        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         use_browser_bots=False,
     ),
 
@@ -46,7 +46,7 @@ SESSION_CONFIGS = [
         network_condition = "test_n100_random",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C6C83AO6',
+        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         use_browser_bots=False,
     ),
 
@@ -58,7 +58,7 @@ SESSION_CONFIGS = [
         network_condition="test_n10",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C6C83AO6',
+        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         use_browser_bots=False,
     ),
 
@@ -70,7 +70,7 @@ SESSION_CONFIGS = [
         network_condition="test_n10_random",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C6C83AO6',
+        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         use_browser_bots=False,
     ),
 ]
