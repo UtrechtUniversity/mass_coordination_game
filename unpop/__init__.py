@@ -22,6 +22,7 @@ from settings import (
     points_per_euro_minority as PPE2,
     num_rounds as nrounds,
     p_minority as p_minority,
+    testing as TEST,
 )
 
 doc = """
@@ -505,6 +506,7 @@ class FinalGameResults(Page):
             base="{:.2f}".format(base),
             bonus="{:.2f}".format(bonus),
             euros="{:.2f}".format(euros),
+            test = TEST,
         )
 
     @staticmethod

@@ -8,7 +8,7 @@ SESSION_CONFIGS = [
         num_demo_participants=30,
         group_size=4,
         network_condition="test_n4",
-        app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
+        app_sequence=["consent", "comprehension", "unpop", "reward", "exit"], #leave out the survey for testing..
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink2='https://app.prolific.com/submissions/complete?cc=C6C83AO6',
         use_browser_bots=False,
@@ -20,7 +20,7 @@ SESSION_CONFIGS = [
         num_demo_participants=50,
         group_size=20,
         network_condition="test_n20",
-        app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
+        app_sequence=["consent", "comprehension", "unpop", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink2='https://app.prolific.com/submissions/complete?cc=C6C83AO6',
         use_browser_bots=False,
@@ -81,7 +81,7 @@ majority_role = 'Red'
 minority_role = 'Blue'
 p_minority = 0.1 # !!this needs to correspond to the proportion of minorities in the network configuration!!
 #based on this a quotum is set (n*p_minority)*2 and the tail probability of being assigned the minority-role
-num_rounds = 30 #set back to 30!
+num_rounds = 1 #set back to 30!
 
 # including also the incentive structure
 s = 15
@@ -97,9 +97,20 @@ max_payment = 7.5 #max of 7.50
 points_per_euro_majority = 200 #conversion (assuming 30 rounds!!)
 points_per_euro_minority = 40
 
+# I want to test the whole infrastructure (entering from prolific, consenting, group formation, etc.);
+testing = True
+# so add some 'disclaimers' to the instructions and consent form etc. ("this is just a test"), conditional on this parameter
 
 #configure a room
 ROOMS = [
+
+    dict(
+        name='3',
+        display_name='Test',
+        # participant_label_file='_rooms/fashion_dilemma.txt',
+        # use_secure_urls=True,
+    ),
+
     dict(
         name='1',
         display_name='Network #1: heterogenous (central fanatics)',

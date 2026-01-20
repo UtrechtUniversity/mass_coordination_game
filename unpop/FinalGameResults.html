@@ -146,13 +146,34 @@
         }
     }
 
+      .consent {
+    background-color: #fff8e1;
+    border: 1px solid #fdd835;
+    padding: 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-top: 30px;
+  }
+
+
 </style>
 {% endblock %}
 
 {% block content %}
+
 <div class="container">
     <div class="table-container">
+
         <h3><i class="fas fa-trophy card-icon"></i> Final result</h3>
+
+        {% if test %}
+        <div class="consent">
+            <p><strong>NOTE:</strong> Since this is a pilot version of our experiment, you will receive a <b>fixed reward</b>, so you can ignore the earnings and payout shown below.</p>
+        </div>
+
+
+<br>
+{% endif %}
         <div class="card mt-5 shadow-lg">
             <div class="card-header">
                 <span>Final payout</span>

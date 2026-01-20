@@ -16,6 +16,7 @@ from settings import (
     points_per_euro_majority as PPE1,
     points_per_euro_minority as PPE2,
     num_rounds as nrounds,
+    testing as TEST,
 )
 # import custom functions
 from unpop.functions import compute_utility, payoff_table
@@ -84,7 +85,8 @@ class IntroductionPage(Page):
             base="{:.2f}".format(Constants.base_payment),
             max="{:.2f}".format(Constants.max_payment),
             num_rounds_lower=round(nrounds * 0.9),
-            num_rounds_upper = round(nrounds * 1.1)
+            num_rounds_upper = round(nrounds * 1.1),
+            test = TEST,
         )
 
 class ComprehensionPage(Page):

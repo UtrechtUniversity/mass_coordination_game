@@ -150,9 +150,8 @@
 
     <div class="section overview">
     <h2><i class="fas fa-binoculars icon-text"></i>Game overview</h2>
-        <p>This is a multiplayer game with a total of <strong>{{ group_size }} players</strong>, spanning between <strong>{{ num_rounds_lower }} and {{ num_rounds_upper }} rounds</strong>.
+        <p>This is a multiplayer game with a total of <strong>{{ group_size }} players</strong>, spanning {% if test %} only <strong>1 round</strong>, for testing purposes. {% else %} between <strong>{{ num_rounds_lower }} and {{ num_rounds_upper }} rounds</strong>.{% endif %}
         Players are connected through a network and will interact with their neighbors—the ones directly linked to them.
-
 </p>
     <p>Each round, you and your co-players are faced with a dilemma: You have to decide whether to wear a <b class="red-role">red shirt</b> or a <b class="blue-role">blue shirt</b>.
         Some players prefer red, while others prefer blue. One group holds a majority, but you don't know which one.</p>

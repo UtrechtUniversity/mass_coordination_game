@@ -9,6 +9,7 @@ from settings import (
     base_payment as base,
     max_payment as maxp,
     p_minority as p_m,
+    testing as TEST,
 )
 
 doc = """
@@ -103,6 +104,7 @@ class ConsentPage(Page):
             base="{:.2f}".format(Constants.base_payment),
             maxp="{:.2f}".format(Constants.max_payment),
             dif="{:.2f}".format(Constants.max_payment - Constants.base_payment),
+            test = TEST,
         )
 
 page_sequence = [ConsentPage]

@@ -57,11 +57,20 @@
   a:hover {
     text-decoration: underline;
   }
+
 </style>
 
 <h1>Information sheet & consent form for the study “The Fashion Dilemma”</h1>
 
 <p>You are invited to participate in a study conducted by the Department of Sociology at Utrecht University. Please read the information below carefully. If you do not give consent, you cannot participate in this study.</p>
+
+{% if test %}
+<div class="consent">
+  <p><strong>NOTE:</strong> This is a short pilot version of this study, being tested to ensure the game works as intended. Your participation will help us improve the study. All other information below applies as usual.</p>
+</div>
+<br>
+{% endif %}
+
 
 <details class="section">
   <summary>Purpose of the study</summary>
