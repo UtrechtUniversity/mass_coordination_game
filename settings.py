@@ -18,7 +18,7 @@ SESSION_CONFIGS = [
     dict(
         name="unpopular_norm_20",
         display_name="test_n20",
-        num_demo_participants=50,
+        num_demo_participants=100,
         group_size=20,
         network_condition="test_n20",
         app_sequence=["consent", "comprehension", "unpop", "reward", "exit"],
@@ -31,8 +31,8 @@ SESSION_CONFIGS = [
     dict(
         name="unpopular_norm_prolific",
         display_name="test_n100",
-        num_demo_participants=150, #number of players allowed to enter the game lobby
-        group_size=100, #number of people needed to populate the network (so 50 excess players)
+        num_demo_participants=200, #number of players allowed to enter the game lobby
+        group_size=100, #number of people needed to populate the network
         network_condition="test_n100",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
@@ -44,7 +44,7 @@ SESSION_CONFIGS = [
     dict(
         name="unpopular_norm_prolific_random",
         display_name="test_n100_random",
-        num_demo_participants=150,
+        num_demo_participants=200,
         group_size=100,
         network_condition = "test_n100_random",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
@@ -57,7 +57,7 @@ SESSION_CONFIGS = [
     dict(
         name="unpopular_norm_test",
         display_name="test_n10",
-        num_demo_participants=30,
+        num_demo_participants=50,
         group_size=10,
         network_condition="test_n10",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
@@ -85,7 +85,7 @@ SESSION_CONFIGS = [
 title = 'The Fashion Dilemma'
 majority_role = 'Red'
 minority_role = 'Blue'
-p_minority = 0.25 # !!this needs to correspond to the proportion of minorities in the network configuration!!
+p_minority = 0.1 # !!this needs to correspond to the proportion of minorities in the network configuration!!
 num_rounds = 1 #set back to 30!
 
 # including also the incentive structure
