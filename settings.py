@@ -10,7 +10,8 @@ SESSION_CONFIGS = [
         network_condition="test_n4",
         app_sequence=["consent", "comprehension", "unpop", "reward", "exit"], #leave out the survey for testing..
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
         use_browser_bots=False,
     ),
 
@@ -22,7 +23,8 @@ SESSION_CONFIGS = [
         network_condition="test_n20",
         app_sequence=["consent", "comprehension", "unpop", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
         use_browser_bots=False,
     ),
 
@@ -34,7 +36,8 @@ SESSION_CONFIGS = [
         network_condition="test_n100",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
         use_browser_bots=False,
     ),
 
@@ -46,7 +49,8 @@ SESSION_CONFIGS = [
         network_condition = "test_n100_random",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
         use_browser_bots=False,
     ),
 
@@ -58,7 +62,8 @@ SESSION_CONFIGS = [
         network_condition="test_n10",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
         use_browser_bots=False,
     ),
 
@@ -70,7 +75,8 @@ SESSION_CONFIGS = [
         network_condition="test_n10_random",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
-        completionlink2='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
         use_browser_bots=False,
     ),
 ]
@@ -79,7 +85,7 @@ SESSION_CONFIGS = [
 title = 'The Fashion Dilemma'
 majority_role = 'Red'
 minority_role = 'Blue'
-p_minority = 0.1 # !!this needs to correspond to the proportion of minorities in the network configuration!!
+p_minority = 0.25 # !!this needs to correspond to the proportion of minorities in the network configuration!!
 #based on this a quotum is set (n*p_minority)*2 and the tail probability of being assigned the minority-role
 num_rounds = 1 #set back to 30!
 

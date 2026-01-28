@@ -53,6 +53,10 @@ class ConsentPage(Page):
     form_model = 'player'
     form_fields = ['consent']
 
+    def is_displayed(player: Player):
+        # Only show consent page if the group has NOT been formed yet
+        return not player.session.vars.get("group_formed", False)
+
     def error_message(player, values):
         if not values.get('consent'):
             return "You must check the box to give your consent in order to participate in this study."

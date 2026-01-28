@@ -515,26 +515,51 @@ class FinalGameResults(Page):
 
 class ExitPage(Page):
     """
-    Displayed to participants who arrive after the main group is full.
+    Displayed to participants who either:
+    - Arrive after the main group is full
+    - Did not consent
     """
 
-    def is_displayed(player):
+    @staticmethod
+    def is_displayed(player: Player):
+        # Only show exit page if the participant was flagged to exit early
         return player.participant.vars.get("exit_early", False)
 
-    def vars_for_template(player):
-        return dict(
-            message=(
-                "Unfortunately, the group for this session is already full. "
-                "You will not be participating in the experiment this time. You will still receive the base payment."
+    @staticmethod
+    def vars_for_template(player: Player):
+        # Determine which message to show and which completion link to use
+        consented = player.participant.vars.get("consent", False)
+
+        if consented:
+            message = (
+                "The group for this session is already full. "
+                "You will not be participating in the experiment this time, "
+                "but you will still receive the base payment for your time and effort."
             )
+            completionlink = player.subsession.session.config.get("completionlink_nogroup")
+        else:
+            message = (
+                "The group for this session is already full. "
+                "You will not be participating in the experiment this time."
+            )
+            completionlink = player.subsession.session.config.get("completionlink_late")
+
+        return dict(
+            message=message,
+            completionlink=completionlink
         )
 
     @staticmethod
-    def js_vars(player):
-        return dict(
-            completionlink=
-              player.subsession.session.config['completionlink2'], #return to prolific with specific code for 'excess players'
+    def js_vars(player: Player):
+
+        consented = player.participant.vars.get("consent", False)
+        completionlink = (
+            player.subsession.session.config.get("completionlink_nogroup")
+            if consented
+            else player.subsession.session.config.get("completionlink_late")
         )
+        return dict(completionlink=completionlink)
+
 
 page_sequence = [
     NetworkFormationWaitPage,
