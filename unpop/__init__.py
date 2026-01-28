@@ -112,7 +112,7 @@ class Group(BaseGroup):
 
             my_choice = player.choice
             my_node = player.participant.node
-            adj_matrix = player.participant.adj_matrix
+            adj_matrix = player.session.vars["net_spec"]["adj_matrix"]
 
             neighbors = []
             for i, connection in enumerate(adj_matrix[my_node]):
@@ -211,7 +211,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
     def assign_nodes_and_matrix(selected_players, adj_matrix):
         for i, p in enumerate(selected_players):
             p.participant.node = i
-            p.participant.adj_matrix = adj_matrix
+            #p.participant.adj_matrix = adj_matrix
             p.participant.is_dropout = False
 
         logger.debug("=== NETWORK DEBUG START ===")
@@ -304,7 +304,7 @@ class NetworkFormationWaitPage(WaitPage):
 
 class IntroductionPage(Page):
     def vars_for_template(player):
-        adj_matrix = player.participant.adj_matrix
+        adj_matrix = player.session.vars["net_spec"]["adj_matrix"]
         my_node = player.participant.node
         degree = sum(adj_matrix[my_node])
         table_data = payoff_table(degree)
@@ -356,7 +356,7 @@ class DecisionPage(Page):
         return not player.participant.vars.get("exit_early", False)
 
     def vars_for_template(player):
-        adj_matrix = player.participant.adj_matrix
+        adj_matrix = player.session.vars["net_spec"]["adj_matrix"]
         my_node = player.participant.node
         degree = sum(adj_matrix[my_node])
 
@@ -418,7 +418,7 @@ class ResultsPage(Page):
         my_payoff = player.payoff
 
         my_node = player.participant.node
-        adj_matrix = player.participant.adj_matrix
+        adj_matrix =player.session.vars["net_spec"]["adj_matrix"]
 
         neighbors = []
         for i, connection in enumerate(adj_matrix[my_node]):

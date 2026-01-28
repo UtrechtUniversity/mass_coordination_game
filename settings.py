@@ -86,7 +86,6 @@ title = 'The Fashion Dilemma'
 majority_role = 'Red'
 minority_role = 'Blue'
 p_minority = 0.25 # !!this needs to correspond to the proportion of minorities in the network configuration!!
-#based on this a quotum is set (n*p_minority)*2 and the tail probability of being assigned the minority-role
 num_rounds = 1 #set back to 30!
 
 # including also the incentive structure
