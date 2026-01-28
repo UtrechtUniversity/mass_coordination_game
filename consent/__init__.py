@@ -25,11 +25,12 @@ class Constants(BaseConstants):
 
     majority = MAJORITY
     minority = MINORITY
-    p_minority = p_m
+
+    p_minority = p_m # the target minority share in the network
+    p_assign_minority = 2 * p_m # oversample minorities (here, x2)
 
     base_payment = base
     max_payment = maxp
-
 
 class Subsession(BaseSubsession):
     pass
@@ -64,40 +65,25 @@ class ConsentPage(Page):
         # timestamp
         player.consent_timestamp = datetime.datetime.now().isoformat()
 
-        s = player.session
-        svars = s.vars
+        """
+        Previously, the first players arriving become a minority, until the required
+        number of minorities is reached; after which entrants become minority with a probability
+        equal to the proportion of minorities in the network condition.
+        Current assignment: players become minority with a probability p that is twice 
+        the proportion of minorities in the network condition (p_assign_minority = 2 * p_m) 
+        """
 
-        # compute a quota: the first players arriving become a minority,
-        # until the required number of minorities is reached.
-        if 'quota' not in svars:
-            group_size = s.config['group_size']
-            svars['quota'] = max(1, round(group_size * Constants.p_minority)) * 2
-
-        # probability of minority assignment after quota
-        if 'p_tail_minority' not in svars:
-            ##svars['p_tail_minority'] = 0.001  #in the case we don't need a tail...
-            svars['p_tail_minority'] = Constants.p_minority
-
-        svars.setdefault('minority_assigned', 0)
-
-        quota = svars['quota']
-        p_tail = svars['p_tail_minority']
-
-        # assignment logic
-        if svars['minority_assigned'] < quota:
-            role = Constants.minority
-            svars['minority_assigned'] += 1
-            reason = f"front-load {svars['minority_assigned']}/{quota}"
-        else:
-            role = Constants.minority if random.random() < p_tail else Constants.majority
-            reason = f"tail Bernoulli p_minority={p_tail:.3f}"
+        role = (
+            Constants.minority
+            if random.random() < Constants.p_assign_minority
+            else Constants.majority
+        )
 
         # store for downstream apps
         player.participant.vars['role'] = role
         player.participant.vars['consent'] = True
 
-        print(f"[assign] P{player.participant.id_in_session} -> {role} ({reason})")
-        print(f"[status] minority_assigned={svars['minority_assigned']}/{quota}, next Bernoulli p={p_tail:.3f}")
+        print(f"[assign] P{player.participant.id_in_session} -> {role}")
 
     def vars_for_template(player):
         return dict(
