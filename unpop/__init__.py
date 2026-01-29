@@ -102,6 +102,7 @@ class Player(BasePlayer):
     is_dropout = models.BooleanField(initial=False)
     bonus = models.FloatField(initial=0)
     arrived_waitpage = models.BooleanField(initial=False) # also track who is on the resultswaitpage (and thus, who has made a choice)
+    arrived_grouppage = models.BooleanField(initial=False) # the same for the groupformationpage
 
 
 class Group(BaseGroup):
@@ -298,6 +299,24 @@ class NetworkFormationWaitPage(WaitPage):
 
     def is_displayed(player):
         return player.round_number == 1
+
+    def vars_for_template(player):
+        if not player.arrived_waitpage:
+            player.arrived_waitpage = True
+
+        waiting_players = player.subsession.get_players()
+        total_arrived = sum(p.arrived_waitpage for p in waiting_players)
+
+        group_size = player.session.config.get("group_size", len(waiting_players))
+        total_needed = int(group_size * 1.3)  # buffer
+
+        if total_needed == 0:
+            percent = 0
+            return dict(percent=percent)
+
+        percent = (total_arrived / total_needed) * 100
+        percent = min(int(percent), 99)
+        return dict(percent=percent)
 
     @staticmethod
     def after_all_players_arrive(group):
