@@ -301,11 +301,11 @@ class NetworkFormationWaitPage(WaitPage):
         return player.round_number == 1
 
     def vars_for_template(player):
-        if not player.arrived_waitpage:
-            player.arrived_waitpage = True
+        if not player.arrived_grouppage:
+            player.arrived_grouppage = True
 
         waiting_players = player.subsession.get_players()
-        total_arrived = sum(p.arrived_waitpage for p in waiting_players)
+        total_arrived = sum(p.arrived_grouppage for p in waiting_players)
 
         group_size = player.session.config.get("group_size", len(waiting_players))
         total_needed = int(group_size * 1.3)  # buffer
