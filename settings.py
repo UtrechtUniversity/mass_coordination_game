@@ -86,7 +86,7 @@ title = 'The Fashion Dilemma'
 majority_role = 'Red'
 minority_role = 'Blue'
 p_minority = 0.1 # !!this needs to correspond to the proportion of minorities in the network configuration!!
-num_rounds = 10 #set back to 30!
+num_rounds = 1 #set back to 30!
 
 # including also the incentive structure
 s = 15
