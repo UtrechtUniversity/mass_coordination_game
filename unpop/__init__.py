@@ -62,7 +62,7 @@ class Constants(BaseConstants):
     lambda1 = L1
     lambda2 = L2
     introduction_timeout_seconds = 60
-    other_pages_timeout_seconds = 60
+    other_pages_timeout_seconds = 600
     points_per_euro_majority = PPE1
     points_per_euro_minority = PPE2
     base_payment = base
@@ -101,6 +101,8 @@ class Player(BasePlayer):
     prolific_id = models.StringField(default=str(" "))
     is_dropout = models.BooleanField(initial=False)
     bonus = models.FloatField(initial=0)
+    arrived_waitpage = models.BooleanField(initial=False) # also track who is on the resultswaitpage (and thus, who has made a choice)
+
 
 class Group(BaseGroup):
     def set_first_stage_earnings(self):
@@ -403,6 +405,23 @@ class ResultsWaitPage(WaitPage):
 
     def is_displayed(player):
         return not player.participant.vars.get("exit_early", False)
+
+    def vars_for_template(player):
+        # mark this player as arrived ONLY ONCE
+        if not player.arrived_waitpage:
+            player.arrived_waitpage = True
+
+        players = player.group.get_players()
+        arrived = sum(p.arrived_waitpage for p in players)
+        total = len(players)
+
+        percent = 100 * arrived / total if total > 0 else 0
+
+        return dict(
+            arrived=arrived,
+            total=total,
+            percent=percent,
+        )
 
     def after_all_players_arrive(group):
         group.set_first_stage_earnings()
