@@ -36,7 +36,7 @@
     ">
         <i class="fas fa-arrow-up"></i>
     </span>
-    to jump and avoid the obstacles.
+    to jump (hold to jump higher) and avoid the obstacles.
 </p>
 
 <div style="text-align:center;">
@@ -88,9 +88,9 @@
     function createGame() {
         let dino = {x: 50, y: 120, width: 20, height: 20, dy: 0, jumping: false, jumpTime: 0};
         let gravity = 0.8;
-        let jumpPower = -8; // initial jump
-        let jumpHoldPower = -0.35; // small additional upward force per frame
-        let maxJumpHold = 20; // max frames for holding jump
+        let jumpPower = -8;
+        let jumpHoldPower = -0.5;
+        let maxJumpHold = 50;
         let obstacles = [];
         let score = 0;
         let gameOver = false;
