@@ -12,8 +12,8 @@ Session Full
         {{ message }}
     </p>
     <p class="text-muted">
-        You will be redirected automatically to Prolific to complete your submission
-        in <span id="seconds">20</span> seconds.
+        You will be redirected automatically to Prolific
+        in <span id="seconds">30</span> seconds.
     </p>
 </div>
 {% endblock %}
@@ -21,7 +21,7 @@ Session Full
 {% block scripts %}
 <script>
     let completionlink = js_vars.completionlink;
-    let seconds = 20;
+    let seconds = 30;
 
     window.onload = function () {
         const counter = document.getElementById("seconds");

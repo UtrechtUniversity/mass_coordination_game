@@ -28,6 +28,19 @@ SESSION_CONFIGS = [
         use_browser_bots=False,
     ),
 
+dict(
+        name="unpopular_norm_50",
+        display_name="test_n50",
+        num_demo_participants=200,
+        group_size=50,
+        network_condition="test_n50",
+        app_sequence=["consent", "comprehension", "unpop", "reward", "exit"],
+        completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
+        completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
+        completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
+        use_browser_bots=False,
+    ),
+
     dict(
         name="unpopular_norm_prolific",
         display_name="test_n100",

@@ -578,7 +578,7 @@ class ExitPage(Page):
         else:
             message = (
                 "The group for this session is already full. "
-                "You will not be participating in the experiment this time."
+                "You will not be participating in the experiment this time. Please return your submission."
             )
             completionlink = player.subsession.session.config.get("completionlink_late")
 

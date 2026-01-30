@@ -64,13 +64,18 @@
 
 <p>You are invited to participate in a study conducted by the Department of Sociology at Utrecht University. Please read the information below carefully. If you do not give consent, you cannot participate in this study.</p>
 
-{% if test %}
 <div class="consent">
-  <p><strong>NOTE:</strong> This is a short pilot version of this study, being tested to ensure the game works as intended. Your participation will help us improve the study. All other information below applies as usual.</p>
+
+  <p><strong>NOTE:</strong>
+    {% if test %}This is a short pilot version of this study, being tested to ensure the game works as intended.
+    Your participation will help us improve the study. Please note that payment for this pilot will follow the Prolific invitation and may differ from the description below.
+    All other information below applies as usual.</p>
+  {% endif %}
+
+  Because this is a real-time interactive study, not all participants may be assigned to a group.
+  If the session is full after you have given consent, you will be returned to Prolific. You will still receive base pay.
 </div>
 <br>
-{% endif %}
-
 
 <details class="section">
   <summary>Purpose of the study</summary>
