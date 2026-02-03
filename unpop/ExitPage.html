@@ -2,9 +2,12 @@
 {% load otree static %}
 
 {% block title %}
+{% if message == "You did not pass the comprehension checks and cannot continue with the experiment. Please return your submission." %}
+Game Over
+{% else %}
 Session Full
+{% endif %}
 {% endblock %}
-
 {% block content %}
 <div class="card p-4 mt-4 text-center">
     <h3>Thank you for your interest!</h3>

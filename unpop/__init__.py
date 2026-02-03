@@ -300,8 +300,13 @@ class NetworkFormationWaitPage(WaitPage):
     template_name = "unpop/GroupFormationPage.html"
     group_by_arrival_time = True
 
+    @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and not player.participant.vars.get("is_dropout", False)
+        return (
+                player.round_number == 1
+                and not player.participant.vars.get("dropout", False)
+                and not player.participant.vars.get("failed_checks", False)
+        )
 
     def vars_for_template(player):
         if not player.arrived_grouppage:

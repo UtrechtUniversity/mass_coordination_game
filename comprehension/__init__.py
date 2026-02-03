@@ -43,6 +43,8 @@ class Constants(BaseConstants):
     points_per_euro_majority = PPE1
     points_per_euro_minority = PPE2
     other_pages_timeout_seconds = 60
+    comprehension_timeout_seconds = 4*60
+    max_retries = 2
 
 class Subsession(BaseSubsession):
     pass
@@ -71,6 +73,7 @@ class IntroductionPage(Page):
         # show only when no group has been formed yet
         return not player.session.vars.get("group_formed", False)
 
+    @staticmethod
     def vars_for_template(player):
         degree = 2 # for instruction, assume 2 neighbors (this can be tweaked)
         table_data = payoff_table(degree)
@@ -93,24 +96,27 @@ class ComprehensionPage(Page):
     form_model = 'player'
     form_fields = ['q_red_zero', 'q_blue_zero', 'q_red_half', 'q_blue_half']
 
-    timeout_seconds = 20
+    timeout_seconds = Constants.comprehension_timeout_seconds
 
     @staticmethod
     def is_displayed(player):
-        # show only when no group has been formed yet
         return not player.session.vars.get("group_formed", False)
+
+    @staticmethod
+    def get_timeout_seconds(player):
+        if player.comprehension_retries >= Constants.max_retries:
+            return 1
+        return Constants.comprehension_timeout_seconds
 
     def vars_for_template(player):
         degree = 2
         table_data = payoff_table(degree)
 
-        # build neighborhood scenarios
-        neighbors_all_blue = [True] * degree  # 0 red neighbors, all blue
-        neighbors_half_half = [True] * (degree // 2) + [False] * (degree - degree // 2) # split
+        neighbors_all_blue = [True] * degree
+        neighbors_half_half = [True] * (degree // 2) + [False] * (degree - degree // 2)
 
         role = player.participant.role
 
-        # False = Red, True = Blue
         payoff_red_zero = compute_utility(False, role, neighbors_all_blue)
         payoff_blue_zero = compute_utility(True, role, neighbors_all_blue)
         payoff_red_half = compute_utility(False, role, neighbors_half_half)
@@ -124,22 +130,29 @@ class ComprehensionPage(Page):
         blue_neighbors_half = degree // 2
         red_neighbors_half = degree - blue_neighbors_half
 
+        tries_left = max(Constants.max_retries - player.comprehension_retries, 0)
+
         return dict(
             role=role,
             degree=degree,
             table_data=table_data,
             blue_neighbors_half=blue_neighbors_half,
             red_neighbors_half=red_neighbors_half,
+            tries_left=tries_left,
         )
 
     def error_message(player, values):
+        # skip error messages if retries exceeded
+        if player.comprehension_retries >= Constants.max_retries:
+            return
+
         correct_answers = {
             'q_red_zero': player.payoff_red_zero,
             'q_blue_zero': player.payoff_blue_zero,
             'q_red_half': player.payoff_red_half,
             'q_blue_half': player.payoff_blue_half,
         }
-        incorrect_fields = []
+
         labels = {
             'q_red_zero': '<b>A</b>',
             'q_blue_zero': '<b>B</b>',
@@ -147,32 +160,37 @@ class ComprehensionPage(Page):
             'q_blue_half': '<b>D</b>',
         }
 
-        for field_name, correct_value in correct_answers.items():
-            if values.get(field_name) != correct_value:
-                incorrect_fields.append(labels[field_name])
+        incorrect_fields = [
+            labels[f] for f, v in correct_answers.items()
+            if values.get(f) != v
+        ]
 
         if incorrect_fields:
             player.comprehension_retries += 1
             role = player.participant.role
-            labels_str = ", ".join(incorrect_fields)
 
-            if role == Constants.minority:
-                explanation = (
-                    "Your payoff only depends on your own shirt choice (Table 1)."
-                )
-            else:
-                explanation = (
-                    "Your total points = reward for picking a color "
-                    "(Table 1) + reward for matching neighbors (Table 2)."
-                )
+            explanation = (
+                "Your payoff only depends on your own shirt choice (Table 1)."
+                if role == Constants.minority
+                else
+                "Your total points = reward for picking a color "
+                "(Table 1) + reward for matching neighbors (Table 2)."
+            )
 
-            return f"Incorrect answers: {labels_str}.  {explanation}"
+            tries_left = max(Constants.max_retries - player.comprehension_retries, 0) + 1
+
+            return (
+                f"Incorrect answers: {', '.join(incorrect_fields)}. {explanation} "
+                f"<b>You have {tries_left} "
+                f"{'try' if tries_left == 1 else 'tries'} left</b>."
+            )
 
     @staticmethod
     def before_next_page(player, timeout_happened):
-        if timeout_happened:
-            player.participant.is_dropout = True
+        if player.comprehension_retries >= Constants.max_retries or timeout_happened:
             player.participant.failed_checks = True
+            player.participant.is_dropout = True
+
 
 page_sequence = [
     IntroductionPage,
