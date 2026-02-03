@@ -93,6 +93,8 @@ class ComprehensionPage(Page):
     form_model = 'player'
     form_fields = ['q_red_zero', 'q_blue_zero', 'q_red_half', 'q_blue_half']
 
+    timeout_seconds = 20
+
     @staticmethod
     def is_displayed(player):
         # show only when no group has been formed yet
@@ -139,10 +141,10 @@ class ComprehensionPage(Page):
         }
         incorrect_fields = []
         labels = {
-            'q_red_zero': 'A',
-            'q_blue_zero': 'B',
-            'q_red_half': 'C',
-            'q_blue_half': 'D',
+            'q_red_zero': '<b>A</b>',
+            'q_blue_zero': '<b>B</b>',
+            'q_red_half': '<b>C</b>',
+            'q_blue_half': '<b>D</b>',
         }
 
         for field_name, correct_value in correct_answers.items():
@@ -165,6 +167,12 @@ class ComprehensionPage(Page):
                 )
 
             return f"Incorrect answers: {labels_str}.  {explanation}"
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        if timeout_happened:
+            player.participant.is_dropout = True
+            player.participant.failed_checks = True
 
 page_sequence = [
     IntroductionPage,

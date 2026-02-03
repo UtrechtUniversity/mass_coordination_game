@@ -304,4 +304,26 @@
     </div>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const nextBtn = document.querySelector('.btn-primary');
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function (event) {
+           const confirmed = confirm(
+               "Please make sure you have read and understood the instructions carefully. Do you want to continue?"
+           );
+            if (!confirmed) {
+                event.preventDefault();
+            } else {
+                const form = nextBtn.closest('form');
+                if (form) {
+                    form.submit();
+                }
+            }
+        });
+    }
+});
+</script>
+
 {% endblock content %}

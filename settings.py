@@ -12,6 +12,7 @@ SESSION_CONFIGS = [
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
+        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1QMTNFEdfasdfasdf',
         use_browser_bots=False,
     ),
 
@@ -90,6 +91,7 @@ dict(
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
+        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1QMTNFEdfasdfasdf',
         use_browser_bots=False,
     ),
 ]
@@ -149,7 +151,7 @@ SESSION_CONFIG_DEFAULTS = dict(
     doc="",
 )
 
-PARTICIPANT_FIELDS = [ "bonus", "consent", "is_dropout", "role", 'has_dropped_out', 'too_many_inactive_in_group','node', 'adj_matrix', 'role_vector', 'exit_early']
+PARTICIPANT_FIELDS = [ "bonus", "consent", "is_dropout", "role", 'has_dropped_out', 'too_many_inactive_in_group','node', 'adj_matrix', 'role_vector', 'exit_early', 'failed_checks']
 LANGUAGE_CODE = "en"
 REAL_WORLD_CURRENCY_CODE = "EUR"
 USE_POINTS = True

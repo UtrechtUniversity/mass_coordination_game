@@ -123,7 +123,10 @@ class Group(BaseGroup):
                     neighbor_player = next(
                         p for p in players if p.participant.node == i
                     )
-                    if not neighbor_player.participant.vars.get("exit_early", False):
+                    if (
+                            not neighbor_player.participant.vars.get("exit_early", False)
+                            and not neighbor_player.participant.vars.get("failed_checks", False)
+                    ):
                         neighbors.append(i)
 
             neighbor_choices = []
@@ -298,7 +301,7 @@ class NetworkFormationWaitPage(WaitPage):
     group_by_arrival_time = True
 
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and not player.participant.vars.get("is_dropout", False)
 
     def vars_for_template(player):
         if not player.arrived_grouppage:
@@ -344,9 +347,7 @@ class IntroductionPage(Page):
         )
 
     def is_displayed(player):
-        return player.round_number == 1 and not player.participant.vars.get(
-            "exit_early", False
-        )
+        return not player.participant.vars.get("exit_early", False) and not player.participant.is_dropout
 
     def get_timeout_seconds(player):
         return timeout_time(player, Constants.introduction_timeout_seconds)
@@ -374,7 +375,7 @@ class DecisionPage(Page):
                 #player.choice = random.random() < 0.5 # or fully random...
 
     def is_displayed(player):
-        return not player.participant.vars.get("exit_early", False)
+        return not player.participant.vars.get("exit_early", False) and not player.participant.is_dropout
 
     def vars_for_template(player):
         adj_matrix = player.session.vars["net_spec"]["adj_matrix"]
@@ -396,6 +397,7 @@ class DecisionPage(Page):
                 for p in player.group.get_players()
                 if p.participant.node in neighbors
                 and not p.participant.vars.get("exit_early", False)
+                and not p.participant.vars.get("failed_checks", False)
                 and p.in_round(prev_round).choice is True
             )
             num_red_previous_round = sum(
@@ -403,6 +405,7 @@ class DecisionPage(Page):
                 for p in player.group.get_players()
                 if p.participant.node in neighbors
                 and not p.participant.vars.get("exit_early", False)
+                and not p.participant.vars.get("failed_checks", False)
                 and p.in_round(prev_round).choice is False
             )
 
@@ -423,7 +426,7 @@ class ResultsWaitPage(WaitPage):
     template_name = "unpop/ResultsWaitPage.html"
 
     def is_displayed(player):
-        return not player.participant.vars.get("exit_early", False)
+        return not player.participant.vars.get("exit_early", False) and not player.participant.is_dropout
 
     def vars_for_template(player):
         # mark this player as arrived ONLY ONCE
@@ -499,7 +502,7 @@ class ResultsPage(Page):
         )
 
     def is_displayed(player):
-        return not player.participant.vars.get("exit_early", False)
+        return not player.participant.vars.get("exit_early", False) and not player.participant.is_dropout
 
     def get_timeout_seconds(player):
         return timeout_time(player, Constants.other_pages_timeout_seconds)
@@ -513,7 +516,8 @@ class FinalGameResults(Page):
     def is_displayed(player):
         return (
             player.round_number == Constants.num_rounds
-            and not player.participant.vars.get("exit_early", False)
+            and not player.participant.vars.get("exit_early", False) and not
+            player.participant.is_dropout
         )
 
     @staticmethod
@@ -556,36 +560,66 @@ class ExitPage(Page):
     Displayed to participants who either:
     - Arrive after the main group is full
     - Did not consent
+    - Failed comprehension checks
     """
 
     @staticmethod
     def is_displayed(player: Player):
-        # Only show exit page if the participant was flagged to exit early
-        return player.participant.vars.get("exit_early", False)
+        return (
+                player.participant.vars.get("exit_early", False)
+                or player.participant.vars.get("failed_checks", False)
+                or not player.participant.vars.get("consent", True)
+        )
 
     @staticmethod
     def vars_for_template(player: Player):
-        # Determine which message to show and which completion link to use
+        exit_early = player.participant.vars.get("exit_early", False)
         consented = player.participant.vars.get("consent", False)
+        failed_checks = player.participant.vars.get("failed_checks", False)
 
-        if consented:
+
+        if not consented:
+            message = (
+                "The group for this session is already full. "
+                "You will not be participating in the experiment this time. "
+                "Please return your submission."
+            )
+            completionlink = player.subsession.session.config.get("completionlink_late")
+
+        elif exit_early:
             message = (
                 "The group for this session is already full. "
                 "You will not be participating in the experiment this time, "
                 "but you will still receive the base payment for your time and effort."
             )
             completionlink = player.subsession.session.config.get("completionlink_nogroup")
-        else:
+
+        elif failed_checks:
             message = (
-                "The group for this session is already full. "
-                "You will not be participating in the experiment this time. Please return your submission."
+                "You did not pass the comprehension checks and cannot continue "
+                "with the experiment. Please return your submission."
             )
-            completionlink = player.subsession.session.config.get("completionlink_late")
+            completionlink = player.subsession.session.config.get("completionlink_failed")
 
         return dict(
             message=message,
-            completionlink=completionlink
+            completionlink=completionlink,
         )
+
+    @staticmethod
+    def js_vars(player: Player):
+        exit_early = player.participant.vars.get("exit_early", False)
+        consented = player.participant.vars.get("consent", False)
+        failed_checks = player.participant.vars.get("failed_checks", False)
+
+        if exit_early:
+            completionlink = player.subsession.session.config.get("completionlink_nogroup")
+        elif not consented:
+            completionlink = player.subsession.session.config.get("completionlink_late")
+        elif failed_checks:
+            completionlink = player.subsession.session.config.get("completionlink_failed")
+
+        return dict(completionlink=completionlink)
 
     @staticmethod
     def js_vars(player: Player):
