@@ -96,7 +96,6 @@ dict(
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
-        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1QMTNFEdfasdfasdf',
         completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1P34K38',
         use_browser_bots=False,
     ),
@@ -107,7 +106,7 @@ title = 'The Fashion Dilemma'
 majority_role = 'Red'
 minority_role = 'Blue'
 p_minority = 0.1 # !!this needs to correspond to the proportion of minorities in the network configuration!!
-num_rounds = 1 #set back to 30!
+num_rounds = 5 #set back to 30!
 
 # including also the incentive structure
 s = 15

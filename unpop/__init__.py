@@ -352,7 +352,11 @@ class IntroductionPage(Page):
         )
 
     def is_displayed(player):
-        return not player.participant.vars.get("exit_early", False) and not player.participant.is_dropout
+        return (
+            player.round_number == 1
+            and not player.participant.vars.get("exit_early", False)
+            and not player.participant.is_dropout
+        )
 
     def get_timeout_seconds(player):
         return timeout_time(player, Constants.introduction_timeout_seconds)
@@ -380,7 +384,7 @@ class DecisionPage(Page):
                 #player.choice = random.random() < 0.5 # or fully random...
 
     def is_displayed(player):
-        return not player.participant.vars.get("exit_early", False) and not player.participant.is_dropout
+        return not player.participant.vars.get("exit_early", False)
 
     def vars_for_template(player):
         adj_matrix = player.session.vars["net_spec"]["adj_matrix"]
@@ -431,7 +435,7 @@ class ResultsWaitPage(WaitPage):
     template_name = "unpop/ResultsWaitPage.html"
 
     def is_displayed(player):
-        return not player.participant.vars.get("exit_early", False) and not player.participant.is_dropout
+        return not player.participant.vars.get("exit_early", False)
 
     def vars_for_template(player):
         # mark this player as arrived ONLY ONCE
