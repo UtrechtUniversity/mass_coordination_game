@@ -383,8 +383,13 @@ class DecisionPage(Page):
                 player.choice = (random.random() < p_minority) # majority pick their preference with 1-p_minority
                 #player.choice = random.random() < 0.5 # or fully random...
 
-    def is_displayed(player):
-        return not player.participant.vars.get("exit_early", False)
+    @staticmethod
+    def is_displayed(player: Player):
+        return (
+                not player.participant.vars.get("exit_early", False)
+                and not player.participant.vars.get("failed_checks", False)
+        )
+
 
     def vars_for_template(player):
         adj_matrix = player.session.vars["net_spec"]["adj_matrix"]
@@ -434,8 +439,12 @@ class DecisionPage(Page):
 class ResultsWaitPage(WaitPage):
     template_name = "unpop/ResultsWaitPage.html"
 
-    def is_displayed(player):
-        return not player.participant.vars.get("exit_early", False)
+    @staticmethod
+    def is_displayed(player: Player):
+        return (
+                not player.participant.vars.get("exit_early", False)
+                and not player.participant.vars.get("failed_checks", False)
+        )
 
     def vars_for_template(player):
         # mark this player as arrived ONLY ONCE
