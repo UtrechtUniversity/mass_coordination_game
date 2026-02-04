@@ -43,6 +43,7 @@ class Constants(BaseConstants):
     points_per_euro_majority = PPE1
     points_per_euro_minority = PPE2
     other_pages_timeout_seconds = 60
+    introduction_timeout_seconds = 8*60
     comprehension_timeout_seconds = 4*60
     max_retries = 2
 
@@ -63,10 +64,11 @@ class Player(BasePlayer):
     payoff_red_half = models.IntegerField()
     payoff_blue_half = models.IntegerField()
 
-    #we also count the number of wrong submissions during the comprehensino check (increments per wrong submission)
+    #we also count the number of wrong submissions during the comprehension check (increments per wrong submission)
     comprehension_retries = models.IntegerField(initial=0)
 
 class IntroductionPage(Page):
+    timeout_seconds = Constants.introduction_timeout_seconds
 
     @staticmethod
     def is_displayed(player):
