@@ -74,14 +74,18 @@ class ConsentPage(Page):
         number of minorities is reached; after which entrants become minority with a probability
         equal to the proportion of minorities in the network condition.
         Current assignment: players become minority with a probability p that is twice 
-        the proportion of minorities in the network condition (p_assign_minority = 2 * p_m) 
+        the proportion of minorities in the network condition (p_assign_minority = 2 * p_m);
+        Also, I reserve a few spots (participant number between 200-250) that will always be the minority 
+        (to efficiently fill potential lacking spots in the network with bots...)
         """
-
-        role = (
-            Constants.minority
-            if random.random() < Constants.p_assign_minority
-            else Constants.majority
-        )
+        if 200 <= player.participant.id_in_session <= 250:
+            role = Constants.minority
+        else:
+            role = (
+                Constants.minority
+                if random.random() < Constants.p_assign_minority
+                else Constants.majority
+            )
 
         # store for downstream apps
         player.participant.vars['role'] = role
