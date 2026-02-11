@@ -45,7 +45,7 @@ class Constants(BaseConstants):
     other_pages_timeout_seconds = 60
     introduction_timeout_seconds = 8*60
     comprehension_timeout_seconds = 4*60
-    max_retries = 2
+    max_retries = 3
 
 class Subsession(BaseSubsession):
     pass

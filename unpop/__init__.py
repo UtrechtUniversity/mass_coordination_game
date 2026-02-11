@@ -104,6 +104,8 @@ class Player(BasePlayer):
     arrived_waitpage = models.BooleanField(initial=False) # also track who is on the resultswaitpage (and thus, who has made a choice)
     arrived_grouppage = models.BooleanField(initial=False) # the same for the groupformationpage
 
+    checked_neighbors = models.BooleanField(initial=False) # check whether players take into account 'social cues' from neighbors
+
 
 class Group(BaseGroup):
     def set_first_stage_earnings(self):
@@ -368,7 +370,7 @@ class IntroductionPage(Page):
 
 class DecisionPage(Page):
     form_model = "player"
-    form_fields = ["choice"]
+    form_fields = ["choice", "checked_neighbors"]
 
     def get_timeout_seconds(player):
         return timeout_time(player, Constants.other_pages_timeout_seconds)

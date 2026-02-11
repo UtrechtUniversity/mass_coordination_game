@@ -22,7 +22,7 @@ body {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
     background-color: #f8f9fc;
     text-align: center;
-    color: black; =
+    color: black;
 }
 
 .button-container {
@@ -292,7 +292,13 @@ h3 {
         <i class="far fa-clock"></i> Day: {{ round_number }}
     </div>
     {% endif %}
+
+    <!-- Add a hidden field to keep track of whether players checked their neighbors' choices -->
+<input type="hidden" name="checked_neighbors" id="checked-neighbors-input" value="False">
 </div>
+
+
+
 {% endblock %}
 
 {% block custom_scripts %}
@@ -300,10 +306,14 @@ h3 {
 document.addEventListener("DOMContentLoaded", function () {
     const statsButton = document.getElementById("show-stats-btn");
     const shirtCount = document.getElementById("shirt-count");
+    const hiddenInput = document.getElementById("checked-neighbors-input");
 
     statsButton.addEventListener("click", function (event) {
         // prevent the form from submitting
         event.preventDefault();
+
+        // record that player clicked "what did my neighbors do"
+        hiddenInput.value = "True";
 
         // toggle the visibility of the shirt count when the button is clicked
         shirtCount.style.display = (shirtCount.style.display === "inline-block") ? "none" : "inline-block";

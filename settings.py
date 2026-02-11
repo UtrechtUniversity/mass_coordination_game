@@ -75,7 +75,7 @@ dict(
     dict(
         name="unpopular_norm_test",
         display_name="test_n10",
-        num_demo_participants=50,
+        num_demo_participants=300,
         group_size=10,
         network_condition="test_n10",
         app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
@@ -106,7 +106,7 @@ title = 'The Fashion Dilemma'
 majority_role = 'Red'
 minority_role = 'Blue'
 p_minority = 0.1 # !!this needs to correspond to the proportion of minorities in the network configuration!!
-num_rounds = 5 #set back to 30!
+num_rounds = 30 #set back to 30!
 
 # including also the incentive structure
 s = 15
@@ -123,7 +123,7 @@ points_per_euro_majority = 200 #conversion (assuming 30 rounds!!)
 points_per_euro_minority = 40
 
 # I want to test the whole infrastructure (entering from prolific, consenting, group formation, etc.);
-testing = True
+testing = False
 # so add some 'disclaimers' to the instructions and consent form etc. ("this is just a test"), conditional on this parameter
 
 #configure a room
