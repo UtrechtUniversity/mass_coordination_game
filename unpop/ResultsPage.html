@@ -196,4 +196,17 @@
         <i class="far fa-clock"></i> Day: {{ round_number }}
     </div>
 </div>
+
+<audio id="ping-sound" src="{% static 'sounds/ping.mp3' %}" preload="auto"></audio>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      // play ping sound
+      const ping = document.getElementById("ping-sound");
+      ping.play().catch(e => {
+          console.log("Audio playback blocked:", e);
+      });
+  });
+</script>
+
 {% endblock %}

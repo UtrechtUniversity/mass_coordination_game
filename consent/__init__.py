@@ -15,6 +15,8 @@ from settings import (
 doc = """
 Participants arrive at a consent form.
 After consenting, they are assigned a role.
+
+(players 200-250 are blue) 
 """
 
 class Constants(BaseConstants):

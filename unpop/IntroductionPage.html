@@ -106,6 +106,16 @@
 {% endblock %}
 
 {% block content %}
+<script>
+    // audio alert (see https://s3.amazonaws.com/otreehub/browsable_source/2ce0564a-3359-48e7-b1d4-8ff436138a55/audio_alert/index.html)
+  document.addEventListener("DOMContentLoaded", function () {
+    let msg = new SpeechSynthesisUtterance("Get ready to play!");
+    msg.lang = "en-US";
+    window.speechSynthesis.speak(msg);
+  });
+</script>
+
+
 <div class="experiment-container">
 
     <div class="header">
