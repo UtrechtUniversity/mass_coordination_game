@@ -12,7 +12,7 @@ SESSION_CONFIGS = [
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
-        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1P34K38',
+        completionlink_failed='https://app.prolific.com/submissions/complete?cc=CJOSV4YE',
         use_browser_bots=False,
     ),
 
@@ -26,7 +26,7 @@ SESSION_CONFIGS = [
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
-        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1P34K38',
+        completionlink_failed='https://app.prolific.com/submissions/complete?cc=CJOSV4YE',
         use_browser_bots=False,
     ),
 
@@ -40,7 +40,7 @@ dict(
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
-        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1P34K38',
+        completionlink_failed='https://app.prolific.com/submissions/complete?cc=CJOSV4YE',
         use_browser_bots=False,
     ),
 
@@ -54,7 +54,7 @@ dict(
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
-        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1P34K38',
+        completionlink_failed='https://app.prolific.com/submissions/complete?cc=CJOSV4YE',
         use_browser_bots=False,
     ),
 
@@ -68,7 +68,7 @@ dict(
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
-        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1P34K38',
+        completionlink_failed='https://app.prolific.com/submissions/complete?cc=CJOSV4YE',
         use_browser_bots=False,
     ),
 
@@ -82,7 +82,7 @@ dict(
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
-        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1P34K38',
+        completionlink_failed='https://app.prolific.com/submissions/complete?cc=CJOSV4YE',
         use_browser_bots=False,
     ),
 
@@ -96,7 +96,7 @@ dict(
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
-        completionlink_failed='https://app.prolific.com/submissions/complete?cc=C1P34K38',
+        completionlink_failed='https://app.prolific.com/submissions/complete?cc=CJOSV4YE',
         use_browser_bots=False,
     ),
 ]
