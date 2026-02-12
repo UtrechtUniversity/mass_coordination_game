@@ -36,7 +36,7 @@ dict(
         num_demo_participants=200,
         group_size=50,
         network_condition="test_n50",
-        app_sequence=["consent", "comprehension", "unpop", "reward", "exit"],
+        app_sequence=["consent", "comprehension", "unpop", "survey", "reward", "exit"],
         completionlink='https://app.prolific.com/submissions/complete?cc=CGMXM1XJ',
         completionlink_nogroup='https://app.prolific.com/submissions/complete?cc=C13ULBPC',
         completionlink_late='https://app.prolific.com/submissions/complete?cc=C1QMTNFE',
