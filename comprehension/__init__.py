@@ -42,7 +42,8 @@ class Constants(BaseConstants):
     max_payment = maxp
     points_per_euro_majority = PPE1
     points_per_euro_minority = PPE2
-    other_pages_timeout_seconds = 60
+    decision_pages_timeout_seconds = 60
+    other_pages_timeout_seconds = 20
     introduction_timeout_seconds = 10*60
     comprehension_timeout_seconds = 5*60
     max_retries = 3

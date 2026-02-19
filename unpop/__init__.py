@@ -62,7 +62,8 @@ class Constants(BaseConstants):
     lambda1 = L1
     lambda2 = L2
     introduction_timeout_seconds = 60
-    other_pages_timeout_seconds = 60
+    decision_pages_timeout_seconds = 60
+    other_pages_timeout_seconds = 20
     points_per_euro_majority = PPE1
     points_per_euro_minority = PPE2
     base_payment = base
@@ -373,7 +374,7 @@ class DecisionPage(Page):
     form_fields = ["choice", "checked_neighbors"]
 
     def get_timeout_seconds(player):
-        return timeout_time(player, Constants.other_pages_timeout_seconds)
+        return timeout_time(player, Constants.decision_pages_timeout_seconds)
 
     def before_next_page(player, timeout_happened):
         timeout_check(player, timeout_happened)
@@ -528,9 +529,6 @@ class ResultsPage(Page):
 
     def get_timeout_seconds(player):
         return timeout_time(player, Constants.other_pages_timeout_seconds)
-
-    def before_next_page(player, timeout_happened):
-        timeout_check(player, timeout_happened)
 
 
 class FinalGameResults(Page):
