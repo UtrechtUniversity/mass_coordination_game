@@ -1,6 +1,75 @@
 {% extends "otree/WaitPage.html" %}
 
+{% block custom_styles %}
+<style>
+
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+/* Page Styles */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #eef1f5;
+    color: #4a4a4a;
+}
+    #dropout-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
+
+.dropout-message {
+    background: white;
+    padding: 50px 70px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    font-family: 'Montserrat', sans-serif;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.dropout-message h2 {
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.dropout-message p {
+    margin: 6px 0;
+    font-size: 1.1em;
+}
+
+
+</style>
+{% endblock %}
+
+
 {% block content %}
+
+{% if is_drop_out %}
+        <div id="dropout-overlay">
+            <div class="dropout-message">
+                <h2>You have exited the game</h2>
+                <p>You did not proceed within the allowed time.</p>
+                <p>You may now close this window.</p>
+            </div>
+</div>
+
+
+
+
+{% endif %}
+
 <p><strong>Waiting for the other players…</strong></p>
 <p>
     Players decided: <strong>{{ arrived }}</strong> / {{ total }}

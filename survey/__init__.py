@@ -64,6 +64,13 @@ class Player(BasePlayer):
 class Questionnaire(Page):
     form_model = 'player'
 
+    def is_displayed(player):
+        return (
+            player.participant.consent == True
+            and not player.participant.vars.get("exit_early", False)
+            and not player.participant.is_dropout
+    )
+
     @staticmethod
     def get_form_fields(player: Player):
         fields = ['enjoyment', 'clarity', 'majority', 'perceived_rq', 'comments']

@@ -435,6 +435,7 @@ class DecisionPage(Page):
             table_data=table_data,
             num_blue_previous_round=num_blue_previous_round,
             num_red_previous_round=num_red_previous_round,
+            is_drop_out = player.participant.is_dropout
         )
 
 
@@ -463,6 +464,7 @@ class ResultsWaitPage(WaitPage):
             arrived=arrived,
             total=total,
             percent=percent,
+            is_drop_out=player.participant.is_dropout,
         )
 
     def after_all_players_arrive(group):
